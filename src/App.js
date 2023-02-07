@@ -8,7 +8,7 @@ import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
-import PrivateRoutes from "./utils/PrivateRoute";
+import PrivateRoutes from "./utils/PrivateRoutes";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
