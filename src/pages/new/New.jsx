@@ -3,9 +3,23 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
+import { avatarRef } from "../../components/googleAuth/firebase";
+import { uploadBytes, ref } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
+  const navigate = useNavigate();
+  const handleAdd = (e) =>{
+    e.preventDefault();
+    console.log(file);
+    uploadBytes(ref(avatarRef,file.name), file).then((snapshot) => {
+      console.log('Uploaded a avatar to Firebase Storage');
+    }).catch((error) => {
+      console.log(error.message);
+    });
+    navigate('/users');
+  };
 
   return (
     <div className="new">
@@ -27,7 +41,7 @@ const New = ({ inputs, title }) => {
             />
           </div>
           <div className="right">
-            <form>
+            <form onSubmit={handleAdd}>
               <div className="formInput">
                 <label htmlFor="file">
                   Image: <DriveFolderUploadOutlinedIcon className="icon" />
@@ -46,7 +60,7 @@ const New = ({ inputs, title }) => {
                   <input type={input.type} placeholder={input.placeholder} />
                 </div>
               ))}
-              <button>Send</button>
+              <button type="submit">Send</button>
             </form>
           </div>
         </div>

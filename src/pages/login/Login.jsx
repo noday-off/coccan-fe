@@ -1,17 +1,16 @@
 import "./login.scss";
 import {auth,provider} from "../../components/googleAuth/firebase";
 import { signInWithPopup } from "firebase/auth";
-import React, {useEffect, useState, useContext} from "react";
+import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [value,setValue] = useState('');
     const navigate = useNavigate();
-    //const {dispatch} = useContext(AuthContext);
 
     localStorage.clear();
 
-    const handleLogin = async () => {
+    const handleLogin = () => {
         signInWithPopup(auth,provider).then((res) => {
           
           if(res.user.email == 'thinn2002@gmail.com'){
@@ -24,15 +23,14 @@ const Login = () => {
         })
     }
 
-    useEffect(()=>{
-      setValue(localStorage.getItem('email'))
-    })
-
+    // useEffect(()=>{
+    //   setValue(localStorage.getItem('email'))
+    // })
 
     return (
         <div className="login">
           <div className="login-form">
-            <button onClick={handleLogin}>Signin with Google</button>
+            <button onClick={handleLogin}>Sign in with Google</button>
           </div>
         </div>
     )

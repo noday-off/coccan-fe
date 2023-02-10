@@ -49,7 +49,7 @@ const Navbar = () => {
           <div className="item">
             <img
               //src="https://images.pexels.com/photos/941693/pexels-photo-941693.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-              src={currentGGUser.photoURL}
+              src={currentGGUser? currentGGUser.photoURL:"https://images.pexels.com/photos/941693/pexels-photo-941693.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"}
               alt=""
               className="avatar"
             />
