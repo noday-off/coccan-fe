@@ -121,3 +121,46 @@ export const userRows = [
     age: 65,
   },
 ];
+
+export const orgColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  {
+    field: "organization",
+    headerName: "Organization",
+    width: 230,
+    renderCell: (params) => {
+      return (
+        <div className="cellWithImg">
+          <img className="cellImg" src={params.row.img} alt="avatar" />
+          {params.row.name}
+        </div>
+      );
+    },
+  },
+  {
+    field: "address",
+    headerName: "Address",
+    width: 250,
+  }
+];
+
+export const orgRows = [
+  {
+    id: 1,
+    name: "Starbucks",
+    address: "Ho Chi Minh city",
+    img: "https://upload.wikimedia.org/wikipedia/vi/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/125px-Starbucks_Corporation_Logo_2011.svg.png"
+  },
+  {
+    id: 2,
+    name: "Phuc Long",
+    address: "Ho Chi Minh city",
+    img: "https://static.mservice.io/placebrand/s/momo-upload-api-200218150929-637176353692616410.jpg"
+  },
+  {
+    id: 3,
+    name: "Cong Caphe",
+    address: "Ho Chi Minh city",
+    img: "https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Cong-Ca-Phe.png"
+  }
+];

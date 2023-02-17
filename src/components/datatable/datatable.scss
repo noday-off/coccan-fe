@@ -13,13 +13,21 @@
 
     .link{
       text-decoration: none;
+      text-align: center;
       color: green;
       font-size: 16px;
       font-weight: 400;
-      border: 1px solid green;
+      width: 40px;
+      border: 1px dashed green;
       padding: 5px;
       border-radius: 5px;
       cursor: pointer;
+    }
+    .link:hover{
+      color: white;
+      background-color: green;
+      border: 1px solid green;
+      box-shadow: 0px 0px 3px 2px #ccc;
     }
   }
 
