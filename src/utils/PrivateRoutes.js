@@ -1,10 +1,10 @@
+import { useContext } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import {auth} from "../components/googleAuth/firebase";
+import AuthContext from '../context/AuthContext';
 
 const PrivateRoutes = () => {
-    // let auth = {'token': auth.currentUser != null};
-    let authcheck = {'token': localStorage.getItem('email') != null};
-    console.log(auth.currentUser);
+    const {auth} = useContext(AuthContext);
+    let authcheck = {'token': auth.accessToken != null};
     return(
         authcheck.token ? <Outlet/> : <Navigate to="/login"/>
     )

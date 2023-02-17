@@ -29,16 +29,23 @@ function App() {
                   element={<New inputs={userInputs} title="Add New User" />}
                   />
               </Route>
-              <Route path="products">
+              <Route path="organizations">
                 <Route index element={<List />} />
-                <Route path=":productId" element={<Single />} />
+                <Route path=":organizationId" element={<Single />} />
                 <Route
                   path="new"
-                  element={<New inputs={productInputs} title="Add New Product" />}
+                  element={<New inputs={productInputs} title="Add New Vouchers" />}
+                  />
+              </Route>
+              <Route path="vouchers">
+                <Route index element={<List />} />
+                <Route path=":voucherId" element={<Single />} />
+                <Route
+                  path="new"
+                  element={<New inputs={productInputs} title="Add New Vouchers" />}
                   />
               </Route>
             </Route>
-
           </Route>
         </Routes>
       </BrowserRouter>

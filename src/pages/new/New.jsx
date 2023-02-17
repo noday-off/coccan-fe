@@ -3,9 +3,9 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
-import { avatarRef } from "../../components/googleAuth/firebase";
 import { uploadBytes, ref } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import { logoRef } from "../../components/googleAuth/firebase";
 
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
@@ -13,8 +13,8 @@ const New = ({ inputs, title }) => {
   const handleAdd = (e) =>{
     e.preventDefault();
     console.log(file);
-    uploadBytes(ref(avatarRef,file.name), file).then((snapshot) => {
-      console.log('Uploaded a avatar to Firebase Storage');
+    uploadBytes(ref(logoRef,file.name), file).then((snapshot) => {
+      console.log('Uploaded a logo to Firebase Storage');
     }).catch((error) => {
       console.log(error.message);
     });
