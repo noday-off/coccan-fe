@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const Datatable = ({inputType}) => {
   const [data, setData] = useState(inputType=="user"?userRows:orgRows);
-
+  const url = inputType == 'user'? '/users/new':'/organizations/new';
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
   };
@@ -41,7 +41,7 @@ const Datatable = ({inputType}) => {
     <div className="datatable">
       <div className="datatableTitle">
         Add New User
-        <Link to="/users/new" className="link">
+        <Link to={url} className="link">
           +
         </Link>
       </div>

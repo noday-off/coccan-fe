@@ -4,7 +4,7 @@ import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
-import { productInputs, userInputs } from "./formSource";
+import { productInputs, userInputs, orgInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
@@ -34,7 +34,7 @@ function App() {
                 <Route path=":organizationId" element={<Single />} />
                 <Route
                   path="new"
-                  element={<New inputs={productInputs} title="Add New Vouchers" />}
+                  element={<New inputs={orgInputs} title="Add New Organization" />}
                   />
               </Route>
               <Route path="vouchers">

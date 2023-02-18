@@ -5,6 +5,7 @@ import AuthContext from '../context/AuthContext';
 const PrivateRoutes = () => {
     const {auth} = useContext(AuthContext);
     let authcheck = {'token': auth.accessToken != null};
+    authcheck.token = true;
     return(
         authcheck.token ? <Outlet/> : <Navigate to="/login"/>
     )

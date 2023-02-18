@@ -144,7 +144,7 @@ export const orgColumns = [
   }
 ];
 
-export const orgRows = [
+ var orgRows = [
   {
     id: 1,
     name: "Starbucks",
@@ -164,3 +164,5 @@ export const orgRows = [
     img: "https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Cong-Ca-Phe.png"
   }
 ];
+
+export {orgRows};

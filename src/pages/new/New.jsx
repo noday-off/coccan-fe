@@ -3,12 +3,14 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
-import { uploadBytes, ref } from "firebase/storage";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { logoRef } from "../../components/googleAuth/firebase";
+import { orgRows } from "../../datatablesource";
 
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
+  const [data,setData] = useState(orgRows);
   const navigate = useNavigate();
   const handleAdd = (e) =>{
     e.preventDefault();
@@ -18,7 +20,18 @@ const New = ({ inputs, title }) => {
     }).catch((error) => {
       console.log(error.message);
     });
-    navigate('/users');
+    // orgRows.push({
+    //   id: orgRows.length,
+    //   name: document.getElementById('Name'),
+    //   address: document.getElementById('Address')
+    // });
+    getDownloadURL(ref(logoRef, file.name))
+    .then((url) => {
+      //orgRows[orgRows.length-1].img = url;
+    }).catch((e)=>{
+      console.log(e.message);
+    });
+    navigate('/organizations');
   };
 
   return (
@@ -57,7 +70,7 @@ const New = ({ inputs, title }) => {
               {inputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
-                  <input type={input.type} placeholder={input.placeholder} />
+                  <input type={input.type} id={input.label} placeholder={input.placeholder} />
                 </div>
               ))}
               <button type="submit">Send</button>

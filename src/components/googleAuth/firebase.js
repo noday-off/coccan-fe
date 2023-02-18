@@ -31,7 +31,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const storage = getStorage(app);
-const logoRef = ref(storage, 'logo/');
+const logoRef = ref(storage, 'logo');
 const provider = new GoogleAuthProvider();
 export {auth,provider,storage,logoRef};
 //const analytics = getAnalytics(app);
