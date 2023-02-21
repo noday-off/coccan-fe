@@ -14,7 +14,6 @@ const Login = () => {
 
     const handleLogin = async () => {
       signInWithPopup(auth,provider).then((res) => {
-        
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Access-Control-Allow-Origin", "*");
@@ -25,15 +24,14 @@ const Login = () => {
         };
         
         auth.currentUser.getIdTokenResult().then((res)=>{
-          myHeaders.append("Authorization",res.token);
-          
+          myHeaders.append("authentication",res.token);
+          console.log(res.token);
           fetch("https://coccan-api20230202190409.azurewebsites.net/api/Auth", requestOptions)
           .then(response => response.json())
           .then((result) => {
             console.log(result);
             if(result.token){
               const accessToken = result.token;
-              localStorage.setItem('isLoggedin','Logged in');
               setAuth({accessToken});
               navigate('/');
             }

@@ -20,14 +20,9 @@ const New = ({ inputs, title }) => {
     }).catch((error) => {
       console.log(error.message);
     });
-    // orgRows.push({
-    //   id: orgRows.length,
-    //   name: document.getElementById('Name'),
-    //   address: document.getElementById('Address')
-    // });
     getDownloadURL(ref(logoRef, file.name))
     .then((url) => {
-      //orgRows[orgRows.length-1].img = url;
+      console.log(url);
     }).catch((e)=>{
       console.log(e.message);
     });
