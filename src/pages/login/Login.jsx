@@ -26,7 +26,7 @@ const Login = () => {
         auth.currentUser.getIdTokenResult().then((res)=>{
           myHeaders.append("authentication",res.token);
           console.log(res.token);
-          fetch("https://coccan-api20230202190409.azurewebsites.net/api/Auth", requestOptions)
+          fetch(`${process.env.REACT_APP_API_KEY}/Auth`, requestOptions)
           .then(response => response.json())
           .then((result) => {
             console.log(result);

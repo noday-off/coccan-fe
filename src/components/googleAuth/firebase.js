@@ -19,7 +19,7 @@ const firebaseConfigTest = {
 };
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCZy9DWEsqb4Ll98UbCz3nnCUHGjcKLJso",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "coccan.firebaseapp.com",
   projectId: "coccan",
   storageBucket: "coccan.appspot.com",
