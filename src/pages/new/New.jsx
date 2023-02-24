@@ -2,31 +2,89 @@ import "./new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { logoRef } from "../../components/googleAuth/firebase";
 import { orgRows } from "../../datatablesource";
+import { updateOptions } from "../../formSource";
+import AuthContext from "../../context/AuthContext";
 
-const New = ({ inputs, title }) => {
+const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
   const [data,setData] = useState(orgRows);
+  const [departments,setDepartments] = useState([]);
+  const [universities,setUniversities] = useState([]);
+  const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
+
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Access-Control-Allow-Origin", "*");
+  myHeaders.append("Authorization", `Bearer ${auth.accessToken}`);
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+  // get departments, universities list for input form
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
+    .then(response => response.json())
+    .then((result) => setDepartments(result))
+    .catch(error => console.log('error', error));
+    updateOptions(inputs,departments,3);
+
+    fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
+    .then(response => response.json())
+    .then((result) => setUniversities(result))
+    .catch(error => console.log('error', error));
+    updateOptions(inputs, universities,4);
+    
+  }, []);
+  
   const handleAdd = (e) =>{
     e.preventDefault();
-    console.log(file);
-    uploadBytes(ref(logoRef,file.name), file).then((snapshot) => {
-      console.log('Uploaded a logo to Firebase Storage');
-    }).catch((error) => {
-      console.log(error.message);
-    });
-    getDownloadURL(ref(logoRef, file.name))
-    .then((url) => {
-      console.log(url);
-    }).catch((e)=>{
-      console.log(e.message);
-    });
-    navigate('/organizations');
+    switch(inputType){
+      case 'user':
+        requestOptions.method = 'POST';
+        requestOptions.body = JSON.stringify({
+          "role": document.getElementById("role")?.value,
+          "username": document.getElementById("username")?.value,
+          "email": document.getElementById("email")?.value,
+          "departmentId": document.getElementById("departmentId")?.value,
+          "universityId": document.getElementById("universityId")?.value
+        });
+        
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/users`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => console.log(`Created userId: ${result.id}`))
+        .catch(error => console.log('error', error));
+        navigate("/users");
+        break;
+      case 'organization':
+        requestOptions.method = 'POST';
+        var formdata = new FormData();
+        formdata.append("Name", document.getElementById("name")?.value);
+        formdata.append("Description", document.getElementById("description")?.value);
+        uploadBytes(ref(logoRef,file.name), file).then((snapshot) => {
+          console.log('Uploaded a logo file to Firebase Storage!');
+        });
+        getDownloadURL(ref(logoRef, file.name))
+        .then((url) =>{
+          formdata.append("Logo",url);
+          requestOptions.body = formdata;
+          console.log(requestOptions);
+          fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
+          .then(response => response)
+          .then(result => result.data)
+        });
+
+        break;
+      default:
+        navigate('/organization');
+        break;
+    }
   };
 
   return (
@@ -62,10 +120,32 @@ const New = ({ inputs, title }) => {
                 />
               </div>
 
-              {inputs.map((input) => (
+              {/* {inputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
                   <input type={input.type} id={input.label} placeholder={input.placeholder} />
+                </div>
+              ))} */}
+
+              {inputs.map((field) => (
+                <div key={field.index}>
+                  <label htmlFor={field.name}>{field.label}</label>
+                  {field.type === "select" ? (
+                    <select id={field.name} name={field.name} >
+                      {field.options.map((option, index) => (
+                        <option key={index} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={field.type}
+                      id={field.name}
+                      name={field.name}
+                      placeholder={field.placeholder}
+                    />
+                  )}
                 </div>
               ))}
               <button type="submit">Send</button>

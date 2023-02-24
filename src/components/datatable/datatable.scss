@@ -62,6 +62,24 @@
     }
   }
 
+  .cellWithRole {
+    padding: 5px;
+    border-radius: 5px;
+
+    &.STUDENT {
+      background-color: rgba(0, 128, 0, 0.05);
+      color: green;
+    }
+    &.LECTURER {
+      background-color: rgba(169, 116, 222, 0.05);
+      color: blueviolet;
+    }
+    &.ADMIN {
+      background-color: rgba(248, 102, 83, 0.05);
+      color: red;
+    }
+  }
+
   .cellAction {
     display: flex;
     align-items: center;

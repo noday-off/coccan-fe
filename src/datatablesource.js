@@ -1,4 +1,4 @@
-export const userColumns = [
+export const UsersColumns = [
   { field: "id", headerName: "ID", width: 70 },
   {
     field: "user",
@@ -7,8 +7,8 @@ export const userColumns = [
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.img} alt="avatar" />
-          {params.row.username}
+          <img className="cellImg" src={params.row.profilePhoto ? params.row.profilePhoto: 'https://illustoon.com/photo/2241.png'} alt="avatar" />
+          {params.row.profilePhoto}
         </div>
       );
     },
@@ -18,24 +18,30 @@ export const userColumns = [
     headerName: "Email",
     width: 230,
   },
-
   {
-    field: "age",
-    headerName: "Age",
+    field: "role",
+    headerName: "Role",
     width: 100,
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    width: 160,
-    renderCell: (params) => {
+    renderCell: (params) =>{
       return (
-        <div className={`cellWithStatus ${params.row.status}`}>
-          {params.row.status}
+        <div className={`cellWithRole ${params.row.role}`}>
+            {params.row.role}
         </div>
       );
-    },
+    }
   },
+  // {
+  //   field: "status",
+  //   headerName: "Status",
+  //   width: 160,
+  //   renderCell: (params) => {
+  //     return (
+  //       <div className={`cellWithStatus ${params.row.status}`}>
+  //         {params.row.status}
+  //       </div>
+  //     );
+  //   },
+  // },
 ];
 
 //temporary data
@@ -122,7 +128,7 @@ export const userRows = [
   },
 ];
 
-export const orgColumns = [
+export const OrganizationsColumns = [
   { field: "id", headerName: "ID", width: 70 },
   {
     field: "organization",
@@ -166,3 +172,74 @@ export const orgColumns = [
 ];
 
 export {orgRows};
+
+
+export const dataFormat ={
+  Organizations: [
+    { field: "id", headerName: "ID", width: 70 },
+    {
+      field: "organization",
+      headerName: "Organization",
+      width: 230,
+      renderCell: (params) => {
+        return (
+          <div className="cellWithImg">
+            <img className="cellImg" src={params.row.logo} alt="avatar" />
+            {params.row.name}
+          </div>
+        );
+      },
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      width: 250,
+    }
+  ],
+  Users: [
+    { field: "id", headerName: "ID", width: 70 },
+    {
+      field: "user",
+      headerName: "User",
+      width: 230,
+      renderCell: (params) => {
+        return (
+          <div className="cellWithImg">
+            <img className="cellImg" src={params.row.profilePhoto ?? 'https://illustoon.com/photo/2241.png'} alt="avatar" />
+            {params.row.username}
+          </div>
+        );
+      },
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      width: 230,
+    },
+    {
+      field: "role",
+      headerName: "Role",
+      width: 100,
+      renderCell: (params) =>{
+        return (
+          <div className={`cellWithRole ${params.row.role}`}>
+              {params.row.role}
+          </div>
+        );
+      }
+    },
+    // {
+    //   field: "status",
+    //   headerName: "Status",
+    //   width: 160,
+    //   renderCell: (params) => {
+    //     return (
+    //       <div className={`cellWithStatus ${params.row.status}`}>
+    //         {params.row.status}
+    //       </div>
+    //     );
+    //   },
+    // },
+  ]
+
+}

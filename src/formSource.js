@@ -1,44 +1,42 @@
 export const userInputs = [
     {
       id: 1,
-      label: "Username",
-      type: "text",
-      placeholder: "john_doe",
+      label: "Role",
+      type: "select",
+      name: "role",
+      options:[
+        {value: "STUDENT", label: "Student"},
+        {value: "LECTURER", label: "Lecturer"},
+        {value: "ADMIN", label: "Admin"},
+      ]
     },
     {
       id: 2,
-      label: "Name and surname",
+      label: "Username",
       type: "text",
-      placeholder: "John Doe",
+      name: "username",
+      placeholder: "Tiger Tran",
     },
     {
       id: 3,
       label: "Email",
       type: "mail",
-      placeholder: "john_doe@gmail.com",
+      name: "email",
+      placeholder: "ahuhu@fpt.edu.vn",
     },
     {
       id: 4,
-      label: "Phone",
-      type: "text",
-      placeholder: "+1 234 567 89",
+      label: "Department",
+      type: "select",
+      name: "departmentId",
+      options: []
     },
     {
       id: 5,
-      label: "Password",
-      type: "password",
-    },
-    {
-      id: 6,
-      label: "Address",
-      type: "text",
-      placeholder: "Elton St. 216 NewYork",
-    },
-    {
-      id: 7,
-      label: "Country",
-      type: "text",
-      placeholder: "USA",
+      label: "University",
+      type: "select",
+      name: "universityId",
+      options: []
     },
   ];
   
@@ -80,12 +78,24 @@ export const orgInputs = [
     id: 1,
     label: "Name",
     type: "text",
+    name: "name",
     placeholder: "Highland coffee"
   },
   {
     id: 2,
-    label: "Address",
+    label: "Description",
     type: "text",
+    name: "description",
     placeholder: "Ho Chi Minh city"
   },  
 ];
+
+export const updateValue = (field,values) => {
+  field = values;
+};
+
+export const updateOptions = (userForm,values,index) => {
+  values.forEach((value)=>{
+    userForm[index].options.push({value: value.id, label: value.name});
+  });
+};
