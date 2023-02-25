@@ -1,14 +1,14 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { dataFormat } from "../../datatablesource";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 
 const Datatable = ({inputType}) => {
   const [data, setData] = useState(null);
   const {auth} = useContext(AuthContext);
-  
+  const navigate = useNavigation;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Access-Control-Allow-Origin", "*");
@@ -29,12 +29,13 @@ const Datatable = ({inputType}) => {
 
   // delete item
   const handleDelete = (id) => {
-    // requestOptions.method = 'DELETE';
-    // fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`)}`, requestOptions)
-    // .then(response => response.json())
-    // .then((result) => setData(result))
-    // .catch(error => console.log('error', error));
-    setData(data.filter((item) => item.id !== id));
+    requestOptions.method = 'DELETE';
+    fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`/${id}`)}`, requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+    //setData(data.filter((id) => data.id != id));
+    navigate(0);
   };
   
 

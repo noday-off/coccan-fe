@@ -43,7 +43,7 @@ const New = ({ inputs,inputType, title }) => {
     
   }, []);
   
-  const handleAdd = (e) =>{
+  const handleAdd = async (e) =>{
     e.preventDefault();
     switch(inputType){
       case 'user':
@@ -53,10 +53,10 @@ const New = ({ inputs,inputType, title }) => {
           "username": document.getElementById("username")?.value,
           "email": document.getElementById("email")?.value,
           "departmentId": document.getElementById("departmentId")?.value,
-          "universityId": document.getElementById("universityId")?.value
+          "universityId": document.getElementById("universityId")?.value,
         });
         
-        fetch(`${process.env.REACT_APP_API_KEY.concat(`/users`)}`, requestOptions)
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/users`)}`, requestOptions)
         .then(response => response.json())
         .then((result) => console.log(`Created userId: ${result.id}`))
         .catch(error => console.log('error', error));
@@ -67,22 +67,24 @@ const New = ({ inputs,inputType, title }) => {
         var formdata = new FormData();
         formdata.append("Name", document.getElementById("name")?.value);
         formdata.append("Description", document.getElementById("description")?.value);
-        uploadBytes(ref(logoRef,file.name), file).then((snapshot) => {
+        await uploadBytes(ref(logoRef,file.name), file).then((snapshot) => {
           console.log('Uploaded a logo file to Firebase Storage!');
         });
-        getDownloadURL(ref(logoRef, file.name))
+        await getDownloadURL(ref(logoRef, file.name))
         .then((url) =>{
           formdata.append("Logo",url);
           requestOptions.body = formdata;
-          console.log(requestOptions);
-          fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
-          .then(response => response)
-          .then(result => result.data)
         });
-
+        // for (const value of formdata.values()) {
+        //   console.log(value);
+        // }
+         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
+        .then(response => response)
+        .then(result => result.data)
+        navigate('/organizations');
         break;
       default:
-        navigate('/organization');
+        navigate('/');
         break;
     }
   };
