@@ -8,7 +8,7 @@ import { getStorage, ref } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+const firebaseConfigTest = {
   apiKey: "AIzaSyAFJmvjGOY24vbbOoJCgYEsXzkGd7rLtTE",
   authDomain: "coccan-gg-auth.firebaseapp.com",
   projectId: "coccan-gg-auth",
@@ -18,11 +18,20 @@ const firebaseConfig = {
   measurementId: "G-P7SQED90D7"
 };
 
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: "coccan.firebaseapp.com",
+  projectId: "coccan",
+  storageBucket: "coccan.appspot.com",
+  messagingSenderId: "975101521802",
+  appId: "1:975101521802:web:bb1393a3040140d7262273",
+  measurementId: "G-1D2B7WE7FC"
+};
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const storage = getStorage(app);
-const avatarRef = ref(storage, 'avatars/');
+const logoRef = ref(storage, 'logo');
 const provider = new GoogleAuthProvider();
-export {auth,provider,storage,avatarRef};
+export {auth,provider,storage,logoRef};
 //const analytics = getAnalytics(app);

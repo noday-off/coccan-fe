@@ -13,13 +13,21 @@
 
     .link{
       text-decoration: none;
+      text-align: center;
       color: green;
       font-size: 16px;
       font-weight: 400;
-      border: 1px solid green;
+      width: 40px;
+      border: 1px dashed green;
       padding: 5px;
       border-radius: 5px;
       cursor: pointer;
+    }
+    .link:hover{
+      color: white;
+      background-color: green;
+      border: 1px solid green;
+      box-shadow: 0px 0px 3px 2px #ccc;
     }
   }
 
@@ -51,6 +59,24 @@
     &.passive {
       background-color: rgba(255, 0, 0, 0.05);
       color: crimson;
+    }
+  }
+
+  .cellWithRole {
+    padding: 5px;
+    border-radius: 5px;
+
+    &.STUDENT {
+      background-color: rgba(0, 128, 0, 0.05);
+      color: green;
+    }
+    &.LECTURER {
+      background-color: rgba(169, 116, 222, 0.05);
+      color: blueviolet;
+    }
+    &.ADMIN {
+      background-color: rgba(248, 102, 83, 0.05);
+      color: red;
     }
   }
 
