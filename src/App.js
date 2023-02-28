@@ -31,7 +31,7 @@ function App() {
               </Route>
               <Route path="organizations">
                 <Route index element={<List inputType="Organizations" />} />
-                <Route path=":organizationId" element={<Single />} />
+                <Route path=":organizationId" element={<Single inputType="Organizations"/>} />
                 <Route
                   path="new"
                   element={<New inputs={orgInputs} inputType="organization" title="Add New Organization" />}

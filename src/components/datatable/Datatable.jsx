@@ -45,26 +45,45 @@ const Datatable = ({inputType}) => {
       headerName: "Action",
       width: 200,
       renderCell: (params) => {
-        return (
-          <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
-              <div className="viewButton">View</div>
-            </Link>
-            <div
-              className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
-            >
-              Delete
+        switch (inputType) {
+
+          case 'Organizations':
+            return (
+              <div className="cellAction">
+                <Link to={`/organizations/${params.row.id}`} style={{ textDecoration: "none" }}>
+                  <div className="viewButton">View</div>
+                </Link>
+                <div
+                  className="deleteButton"
+                  onClick={() => handleDelete(params.row.id)}
+                >
+                  Delete
+                </div>
+              </div>
+            )
+            break;
+          default: 
+          return (
+            <div className="cellAction">
+              <Link to="/users/test" style={{ textDecoration: "none" }}>
+                <div className="viewButton">View</div>
+              </Link>
+              <div
+                className="deleteButton"
+                onClick={() => handleDelete(params.row.id)}
+              >
+                Delete
+              </div>
             </div>
-          </div>
-        );
+          );
+        }
       },
     },
   ];
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Add New User
+        Add New {inputType}
         <Link to='new' className="link">
           +
         </Link>
