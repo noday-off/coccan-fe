@@ -94,8 +94,9 @@ export const updateValue = (field,values) => {
   field = values;
 };
 
-export const updateOptions = (userForm,values,index) => {
-  values.forEach((value)=>{
-    userForm[index].options.push({value: value.id, label: value.name});
+export const 
+updateOptions = (userForm,values,index) => {
+  userForm[index].options = values.map((item) => {
+    return {value: item.id, label: item.name};
   });
 };

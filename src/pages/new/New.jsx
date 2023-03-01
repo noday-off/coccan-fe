@@ -6,15 +6,11 @@ import { useContext, useEffect, useState } from "react";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { logoRef } from "../../components/googleAuth/firebase";
-import { orgRows } from "../../datatablesource";
 import { updateOptions } from "../../formSource";
 import AuthContext from "../../context/AuthContext";
 
 const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
-  const [data,setData] = useState(orgRows);
-  const [departments,setDepartments] = useState([]);
-  const [universities,setUniversities] = useState([]);
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -23,26 +19,24 @@ const New = ({ inputs,inputType, title }) => {
   myHeaders.append("Access-Control-Allow-Origin", "*");
   myHeaders.append("Authorization", `Bearer ${auth.accessToken}`);
   var requestOptions = {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
-  };
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
   // get departments, universities list for input form
-  useEffect(() => {
+  useEffect( () => {
     fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
     .then(response => response.json())
-    .then((result) => setDepartments(result))
+    .then((result) => {
+      updateOptions(inputs,result,3);
+      fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
+      .then(response => response.json())
+      .then((result) => updateOptions(inputs,result,4));
+    })
     .catch(error => console.log('error', error));
-    updateOptions(inputs,departments,3);
-
-    fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
-    .then(response => response.json())
-    .then((result) => setUniversities(result))
-    .catch(error => console.log('error', error));
-    updateOptions(inputs, universities,4);
     
-  }, []);
-  
+  }, [inputs]);
+    
   const handleAdd = async (e) =>{
     e.preventDefault();
     switch(inputType){
@@ -55,33 +49,28 @@ const New = ({ inputs,inputType, title }) => {
           "departmentId": document.getElementById("departmentId")?.value,
           "universityId": document.getElementById("universityId")?.value,
         });
-        
+          
         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/users`)}`, requestOptions)
         .then(response => response.json())
         .then((result) => console.log(`Created userId: ${result.id}`))
         .catch(error => console.log('error', error));
         navigate("/users");
         break;
-      case 'organization':
-        requestOptions.method = 'POST';
-        var formdata = new FormData();
-        formdata.append("Name", document.getElementById("name")?.value);
-        formdata.append("Description", document.getElementById("description")?.value);
-        await uploadBytes(ref(logoRef,file.name), file).then((snapshot) => {
-          console.log('Uploaded a logo file to Firebase Storage!');
-        });
-        await getDownloadURL(ref(logoRef, file.name))
-        .then((url) =>{
-          formdata.append("Logo",url);
-          requestOptions.body = formdata;
-        });
-        // for (const value of formdata.values()) {
-        //   console.log(value);
-        // }
-         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
-        .then(response => response)
-        .then(result => result.data)
-        navigate('/organizations');
+      case 'organization':          
+        const XHR = new XMLHttpRequest();
+        const formdata = new FormData();
+        formdata.append("Name", document.getElementById('name').value);
+        formdata.append("Description", document.getElementById('description').value);
+        formdata.append("Logo", file);
+        XHR.onreadystatechange = function() {
+          if (XHR.readyState == XMLHttpRequest.DONE) {
+            navigate('/organizations');
+          }else{
+            navigate('/organizations');
+          }
+        };
+        XHR.open("POST","https://coccan-api20230202190409.azurewebsites.net/api/Organizations");
+        XHR.send(formdata);
         break;
       default:
         navigate('/');
@@ -109,7 +98,7 @@ const New = ({ inputs,inputType, title }) => {
             />
           </div>
           <div className="right">
-            <form onSubmit={handleAdd}>
+            <form onSubmit={handleAdd} id="new-form">
               <div className="formInput">
                 <label htmlFor="file">
                   Image: <DriveFolderUploadOutlinedIcon className="icon" />
@@ -117,6 +106,7 @@ const New = ({ inputs,inputType, title }) => {
                 <input
                   type="file"
                   id="file"
+                  name="Logo"
                   onChange={(e) => setFile(e.target.files[0])}
                   style={{ display: "none" }}
                 />

@@ -23,7 +23,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="users">
                 <Route index element={<List inputType="Users"/>} />
-                <Route path=":userId" element={<Single />} />
+                <Route path="single" element={<Single inputs={userInputs} title='User Details' inputType="Users" />} />
                 <Route
                   path="new"
                   element={<New inputs={userInputs} inputType="user" title="Add New User" />}
@@ -31,7 +31,7 @@ function App() {
               </Route>
               <Route path="organizations">
                 <Route index element={<List inputType="Organizations" />} />
-                <Route path=":organizationId" element={<Single />} />
+                <Route path="single" element={<Single inputs={orgInputs} title='Organization Details' inputType="Organizations"/>} />
                 <Route
                   path="new"
                   element={<New inputs={orgInputs} inputType="organization" title="Add New Organization" />}

@@ -11,6 +11,16 @@
     align-items: center;
     justify-content: space-between;
 
+    button{
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .icon {
+      font-size: 25px;
+      color: #9f9f9f;
+    }
+
     .link{
       text-decoration: none;
       text-align: center;
