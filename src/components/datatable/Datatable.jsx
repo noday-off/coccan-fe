@@ -61,7 +61,7 @@ const Datatable = ({inputType}) => {
 				return (
 					<div className="cellAction">
 						<Link to={`single?id=${params.row.id}`} style={{ textDecoration: "none" }}>
-							<div className="viewButton">View</div>
+							<div className="viewButton">Update</div>
 						</Link>
 						<div
 							className="deleteButton"

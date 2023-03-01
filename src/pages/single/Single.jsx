@@ -12,6 +12,10 @@ import { useNavigate } from "react-router-dom";
 const Single = ({inputs,inputType,title}) => {
   const [data,setData] = useState(null);
   const [file,setFile] = useState('');
+  const [name,setName] = useState('');
+  const [description,setDescription] = useState('');
+  const [email,setEmail] = useState('');
+  const [username,setUsername] = useState('');
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
   const id = new URLSearchParams(window.location.search).get('id');
@@ -31,6 +35,13 @@ const Single = ({inputs,inputType,title}) => {
     .then((result) => {
       setData(result);
       setFile(result.Logo || '');
+      if(inputType == 'Users'){
+        setUsername(result.username);
+        setEmail(result.email);
+      }else if(inputType == 'Organizations'){
+        setName(result.name);
+        setDescription(result.description);
+      }
     })
     .catch(error => console.log('error', error));
   };
@@ -56,7 +67,7 @@ const Single = ({inputs,inputType,title}) => {
           "role": document.getElementById("role")?.value,
           "username": document.getElementById("username")?.value,
           "email": document.getElementById("email")?.value,
-          "profilePhoto": document.getElementById("file").value,
+          "profilePhoto": data.profilePhoto,
           "departmentId": document.getElementById("departmentId")?.value,
           "universityId": document.getElementById("universityId")?.value,
         });
@@ -70,8 +81,12 @@ const Single = ({inputs,inputType,title}) => {
       case 'Organizations':
         const XHR = new XMLHttpRequest();
         const formdata = new FormData();
-        formdata.append("Name", document.getElementById('name').value);
-        formdata.append("Description", document.getElementById('description').value);
+        formdata.append("Name", 
+                            //document.getElementById('name').value);
+                            name);
+        formdata.append("Description", 
+                            //document.getElementById('description').value);
+                            description);
         formdata.append("Logo", file);
         XHR.onreadystatechange = function() {
           if (XHR.readyState == XMLHttpRequest.DONE) {
@@ -88,6 +103,15 @@ const Single = ({inputs,inputType,title}) => {
         break;
     };
   };
+
+  const handleChange = (e, key) =>{
+    switch(key){
+      case 'name': setName(e.target.value);data[key] = e.target.value;break;
+      case 'description': setDescription(e.target.value);data[key] = e.target.value;break;
+      case 'username': setUsername(e.target.value);data[key] = e.target.value;break;
+      case 'email': setEmail(e.target.value);data[key] = e.target.value;break;
+    }
+  }
   
   return (
     <div className="new">
@@ -143,6 +167,7 @@ const Single = ({inputs,inputType,title}) => {
                       id={field.name}
                       name={field.name}
                       placeholder={field.placeholder}
+                      onChange={(e) => handleChange(e,field.name)}
                       value ={data? data[field.name] : null}
                     />
                   )}
