@@ -38,7 +38,7 @@ function App() {
                 />
               </Route>
               <Route path="vouchers">
-                <Route index element={<List />} />
+                <Route index element={<List inputType="Vouchers"/>} />
                 <Route path=":voucherId" element={<Single />} />
                 <Route
                   path="new"
