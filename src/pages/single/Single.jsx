@@ -12,7 +12,9 @@ import { useNavigate } from "react-router-dom";
 const Single = ({inputs,inputType,title}) => {
   const [data,setData] = useState(null);
   const [file,setFile] = useState('');
+  const [logoLink,setLogoLink] = useState('');
   const [name,setName] = useState('');
+  const [logoLinkFile,setLogoLinkFile] = useState('');
   const [description,setDescription] = useState('');
   const [email,setEmail] = useState('');
   const [username,setUsername] = useState('');
@@ -37,7 +39,8 @@ const Single = ({inputs,inputType,title}) => {
     .then(response => response.json())
     .then((result) => {
       setData(result);
-      setFile(result.Logo || '');
+      setFile(result.logo || result.profilePhoto || '');
+      setLogoLink(result.logo || result.profilePhoto || '');
       if(inputType == 'Users'){
         setUsername(result.username);
         setEmail(result.email);
@@ -90,8 +93,8 @@ const Single = ({inputs,inputType,title}) => {
         formdata.append("Description", 
                             //document.getElementById('description').value);
                             description);
-        var logoBinary = new Blob([file], {type: "application/octet-stream"});
-        formdata.append("Logo", logoBinary);
+        formdata.append("Logo", file);
+        formdata.append("LogoLink",logoLink);
         XHR.onreadystatechange = function() {
           if (XHR.readyState == XMLHttpRequest.DONE) {
             navigate('/organizations');
@@ -99,7 +102,7 @@ const Single = ({inputs,inputType,title}) => {
             navigate('/organizations');
           }
         };
-        XHR.open("PUT",`https://coccan-api20230202190409.azurewebsites.net/api/Organizations/${id}`);
+        XHR.open("PUT",`${process.env.REACT_APP_API_KEY.concat(`/organizations`).concat(`/${id}`)}`);
         XHR.send(formdata);
         break;
       default:
@@ -147,7 +150,11 @@ const Single = ({inputs,inputType,title}) => {
                   type="file"
                   id="file"
                   name="Logo"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e) =>{ 
+                    const reader = new FileReader();
+                    console.log(reader.readAsText(e.target.files[0]));
+                    return setFile(e.target.files[0])
+                  }}
                   style={{ display: "none" }}
                 />
               </div>

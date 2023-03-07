@@ -23,8 +23,8 @@ const Login = () => {
 				headers: myHeaders,
 				redirect: 'follow'
 				};
-
-
+				console.log('Authenticating...');
+				
 				auth.currentUser.getIdTokenResult().then((res)=>{
 					myHeaders.append("authentication",res.token);
 					fetch(`${process.env.REACT_APP_API_KEY}/Auth`, requestOptions)
@@ -38,14 +38,13 @@ const Login = () => {
 
 							//Decode token
 							if (jwt(accessToken).role === "ADMIN") {
-								console.log('Proceeding...');
 								//set token into local storage
 								localStorage.setItem('jwt',JSON.stringify(accessToken));
 								navigate('/');
-								setError("Something went wrong");
 								console.log('Complete');
 							}
 							else {
+								console.log("Account not allowed");
 								setError("Your account is not allowed to login")
 							}
 						}

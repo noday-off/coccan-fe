@@ -205,13 +205,17 @@ export const dataFormat ={
       field: "organization",
       headerName: "Organization",
       width:180,
-      renderCell: (params)=> {
+      renderCell: (params) => {
+        const org = params.row.organization;
+        if (!org || !org.logo) {
+          return null;
+        }
         return (
           <div className="cellWithImg">
-            <img className="cellImg" src={params.row.organization.logo} alt="avatar"/>
-            {params.row.organization.name}
+            <img className="cellImg" src={org.logo} alt="avatar"/>
+            {org.name}
           </div>
-        )
+        );
       }
     },
   ],
