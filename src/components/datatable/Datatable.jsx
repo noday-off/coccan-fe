@@ -77,7 +77,7 @@ const Datatable = ({inputType}) => {
 	return (
 		<div className="datatable">
 			<div className="datatableTitle">
-				Add New User
+				{inputType}
 				<button onClick={handleRefresh}>
 					<RefreshIcon className="icon" />
 				</button>

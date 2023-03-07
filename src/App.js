@@ -6,7 +6,7 @@ import New from "./pages/new/New";
 import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
 import { productInputs, userInputs, orgInputs } from "./formSource";
 import "./style/dark.scss";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import PrivateRoutes from "./utils/PrivateRoutes";
 
@@ -35,7 +35,7 @@ function App() {
                 <Route
                   path="new"
                   element={<New inputs={orgInputs} inputType="organization" title="Add New Organization" />}
-                  />
+                />
               </Route>
               <Route path="vouchers">
                 <Route index element={<List />} />

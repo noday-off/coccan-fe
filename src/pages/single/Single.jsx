@@ -16,6 +16,9 @@ const Single = ({inputs,inputType,title}) => {
   const [description,setDescription] = useState('');
   const [email,setEmail] = useState('');
   const [username,setUsername] = useState('');
+
+  const [vouchers,setVouchers] = useState('');
+  
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
   const id = new URLSearchParams(window.location.search).get('id');
@@ -87,7 +90,8 @@ const Single = ({inputs,inputType,title}) => {
         formdata.append("Description", 
                             //document.getElementById('description').value);
                             description);
-        formdata.append("Logo", file);
+        var logoBinary = new Blob([file], {type: "application/octet-stream"});
+        formdata.append("Logo", logoBinary);
         XHR.onreadystatechange = function() {
           if (XHR.readyState == XMLHttpRequest.DONE) {
             navigate('/organizations');
