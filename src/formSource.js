@@ -37,40 +37,50 @@ export const userInputs = [
       type: "select",
       name: "universityId",
       options: []
-    },
+    }
   ];
   
-export const productInputs = [
+export const voucherInputs = [
   {
     id: 1,
-    label: "Title",
-    type: "text",
-    placeholder: "Apple Macbook Pro",
+    label: "Organization",
+    type: "select",
+    name: "organizationId",
+    options: []
   },
   {
     id: 2,
-    label: "Description",
-    type: "text",
-    placeholder: "Description",
+    label: "Category",
+    type: "select",
+    name: "categoryId",
+    options: []
   },
   {
     id: 3,
-    label: "Category",
+    label: "Description",
     type: "text",
-    placeholder: "Computers",
+    name: "description",
+    placeholder: "ABC's voucher bonus for customer who ...."
   },
   {
     id: 4,
-    label: "Price",
+    label: "Address",
     type: "text",
-    placeholder: "100",
+    name: "address",
+    placeholder: "123 Str.456",
   },
   {
     id: 5,
-    label: "Stock",
-    type: "text",
-    placeholder: "in stock",
+    label: "Expired Date",
+    type: "datetime-local",
+    placeholder: "2023-03-08T10:56:45.900",
   },
+  {
+    id: 6,
+    label: "Quantity",
+    type: "number",
+    placeholder: "100",
+  }
 ];
 
 export const orgInputs = [

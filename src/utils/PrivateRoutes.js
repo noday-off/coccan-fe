@@ -4,10 +4,10 @@ import AuthContext from '../context/AuthContext';
 
 const PrivateRoutes = () => {
     const {auth} = useContext(AuthContext);
-    let authcheck = {'token': auth.accessToken != null};
+    let authcheck = localStorage.getItem('jwt');
     //authcheck.token = true;
     return(
-        authcheck.token ? <Outlet/> : <Navigate to="/login"/>
+        authcheck ? <Outlet/> : <Navigate to="/login"/>
     )
 }
 

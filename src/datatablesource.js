@@ -175,6 +175,50 @@ export {orgRows};
 
 
 export const dataFormat ={
+  Vouchers: [
+    { 
+      field: "id", 
+      headerName: "ID", 
+      width: 70 
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      width: 250,
+    },
+    {
+      field: "expiredDate",
+      headerName: "Expire Date",
+      width: 180
+    },
+    {
+      field: "number",
+      headerName: "Quantity",
+      width: 70
+    },
+    {
+      field: "address",
+      headerName: "Address",
+      width: 250
+    },
+    {
+      field: "organization",
+      headerName: "Organization",
+      width:180,
+      renderCell: (params) => {
+        const org = params.row.organization;
+        if (!org || !org.logo) {
+          return null;
+        }
+        return (
+          <div className="cellWithImg">
+            <img className="cellImg" src={org.logo} alt="avatar"/>
+            {org.name}
+          </div>
+        );
+      }
+    },
+  ],
   Organizations: [
     { field: "id", headerName: "ID", width: 70 },
     {

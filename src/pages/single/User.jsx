@@ -2,26 +2,15 @@ import "./single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import Chart from "../../components/chart/Chart";
-import List from "../../components/table/Table";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { updateOptions } from "../../formSource";
 import { useNavigate } from "react-router-dom";
 
-const Single = ({inputs,inputType,title}) => {
+const User = ({inputs,inputType,title}) => {
   const [data,setData] = useState(null);
   const [file,setFile] = useState('');
-  const [logoLink,setLogoLink] = useState('');
-  const [name,setName] = useState('');
-  const [logoLinkFile,setLogoLinkFile] = useState('');
   const [description,setDescription] = useState('');
-  const [email,setEmail] = useState('');
-  const [username,setUsername] = useState('');
-  const [role,setRole] = useState('');
-
-  const [vouchers,setVouchers] = useState('');
-  
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
   const id = new URLSearchParams(window.location.search).get('id');
@@ -36,21 +25,10 @@ const Single = ({inputs,inputType,title}) => {
 	};
   
   const fetchData = (id) =>{
-    fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`/${id}`)}`, requestOptions)
+    fetch(`${process.env.REACT_APP_API_KEY.concat(`/users`).concat(`/${id}`)}`, requestOptions)
     .then(response => response.json())
     .then((result) => {
-      setData(result);
-      console.log(result);
-      setFile(result.logo || result.profilePhoto || '');
-      setLogoLink(result.logo || result.profilePhoto || '');
-      if(inputType == 'Users'){
-        setUsername(result.username);
-        setEmail(result.email);
-        setRole(result.role);
-      }else if(inputType == 'Organizations'){
-        setName(result.name);
-        setDescription(result.description);
-      }
+        setData(result);
     })
     .catch(error => console.log('error', error));
   };

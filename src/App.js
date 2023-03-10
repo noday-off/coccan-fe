@@ -3,10 +3,11 @@ import Login from "./pages/login/Login";
 import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
+import VoucherNew from "./pages/new/VoucherNew";
 import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
-import { productInputs, userInputs, orgInputs } from "./formSource";
+import { productInputs, userInputs, orgInputs, voucherInputs } from "./formSource";
 import "./style/dark.scss";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import PrivateRoutes from "./utils/PrivateRoutes";
 
@@ -35,14 +36,14 @@ function App() {
                 <Route
                   path="new"
                   element={<New inputs={orgInputs} inputType="organization" title="Add New Organization" />}
-                  />
+                />
               </Route>
               <Route path="vouchers">
-                <Route index element={<List />} />
+                <Route index element={<List inputType="Vouchers"/>} />
                 <Route path=":voucherId" element={<Single />} />
                 <Route
                   path="new"
-                  element={<New inputs={productInputs} inputType="product" title="Add New Vouchers" />}
+                  element={<VoucherNew inputs={voucherInputs} />}
                   />
               </Route>
             </Route>

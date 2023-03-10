@@ -77,11 +77,11 @@ const Datatable = ({inputType}) => {
 	return (
 		<div className="datatable">
 			<div className="datatableTitle">
-				Add New User
+				{inputType}
 				<button onClick={handleRefresh}>
 					<RefreshIcon className="icon" />
 				</button>
-				<Link to='new' className="link">
+				<Link to={inputType==="Vouchers"? '/vouchers/new' : '/new'} className="link">
 					+
 				</Link>
 			</div>
