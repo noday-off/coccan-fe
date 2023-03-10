@@ -39,7 +39,8 @@ const Login = () => {
 							//Decode token
 							if (jwt(accessToken).role === "ADMIN") {
 								//set token into local storage
-								localStorage.setItem('jwt',accessToken);
+								localStorage.setItem('jwt',JSON.stringify(accessToken));
+								localStorage.setItem('isLoggedIn',true);
 								navigate('/');
 								console.log('Complete');
 							}

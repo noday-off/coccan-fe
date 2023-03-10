@@ -11,9 +11,9 @@ import AuthContext from "../../context/AuthContext";
 
 const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
-
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Access-Control-Allow-Origin", "*");
@@ -25,15 +25,38 @@ const New = ({ inputs,inputType, title }) => {
     };
   // get departments, universities list for input form
   useEffect( () => {
-    fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
-    .then(response => response.json())
-    .then((result) => {
-      updateOptions(inputs,result,3);
-      fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
-      .then(response => response.json())
-      .then((result) => updateOptions(inputs,result,4));
-    })
-    .catch(error => console.log('error', error));
+    switch(inputType) {
+      case 'user':
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+          updateOptions(inputs,result,3);
+          fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
+          .then(response => response.json())
+          .then((result) => {
+            updateOptions(inputs,result,4);
+            setIsLoading(false);
+          })
+        })
+        .catch(error => console.log('error', error));
+        break;
+      case 'voucher':
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+          updateOptions(inputs,result,0);
+
+        })
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+          updateOptions(inputs,result,1);
+          setIsLoading(false);
+        })
+        .catch(error => console.log('error', error));
+      default:
+        break;
+    }
     
   }, [inputs]);
     
@@ -72,6 +95,23 @@ const New = ({ inputs,inputType, title }) => {
         XHR.open("POST","https://coccan-api20230202190409.azurewebsites.net/api/Organizations");
         XHR.send(formdata);
         break;
+      
+      case 'voucher':
+        requestOptions.method="POST";
+        requestOptions.body = JSON.stringify({
+          "organizationId":document.getElementById("organizationId")?.value,
+          "categoryId":document.getElementById("categoryId")?.value,
+          "description":document.getElementById("description")?.value,
+          "address":document.getElementById("address")?.value,
+          "number":document.getElementById("number")?.value,
+          "expiredDate":document.getElementById("expiredDate")?.value
+        });
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`)}`, requestOptions)
+          .then(response => response.json())
+          .then((result) => console.log(result))
+          .catch(error => console.log('error', error));
+        navigate("/vouchers");
+        break;
       default:
         navigate('/');
         break;
@@ -83,67 +123,75 @@ const New = ({ inputs,inputType, title }) => {
       <Sidebar />
       <div className="newContainer">
         <Navbar />
+
         <div className="top">
           <h1>{title}</h1>
         </div>
-        <div className="bottom">
-          <div className="left">
-            <img
-              src={
-                file
-                  ? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-            />
-          </div>
-          <div className="right">
-            <form onSubmit={handleAdd} id="new-form">
-              <div className="formInput">
-                <label htmlFor="file">
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                  type="file"
-                  id="file"
-                  name="Logo"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-              </div>
-
-              {/* {inputs.map((input) => (
-                <div className="formInput" key={input.id}>
-                  <label>{input.label}</label>
-                  <input type={input.type} id={input.label} placeholder={input.placeholder} />
-                </div>
-              ))} */}
-
-              {inputs.map((field) => (
-                <div key={field.index}>
-                  <label htmlFor={field.name}>{field.label}</label>
-                  {field.type === "select" ? (
-                    <select id={field.name} name={field.name} >
-                      {field.options.map((option, index) => (
-                        <option key={index} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
+        {isLoading 
+        ? <h1>Loading...</h1>
+        :
+          <div className="bottom">
+              {inputType!=="voucher" &&
+            <div className="left">
+              <img
+                src={
+                  file
+                    ? URL.createObjectURL(file)
+                    : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                }
+                alt=""
+              />
+            </div>}
+            <div className="right">
+              <form onSubmit={handleAdd} id="new-form">
+                {inputType!=="voucher" &&
+                  <div className="formInput">
+                    <label htmlFor="file">
+                      Image: <DriveFolderUploadOutlinedIcon className="icon" />
+                    </label>
                     <input
-                      type={field.type}
-                      id={field.name}
-                      name={field.name}
-                      placeholder={field.placeholder}
+                      type="file"
+                      id="file"
+                      name="Logo"
+                      onChange={(e) => setFile(e.target.files[0])}
+                      style={{ display: "none" }}
                     />
-                  )}
-                </div>
-              ))}
-              <button type="submit">Send</button>
-            </form>
+                  </div>
+                }
+
+                {/* {inputs.map((input) => (
+                  <div className="formInput" key={input.id}>
+                    <label>{input.label}</label>
+                    <input type={input.type} id={input.label} placeholder={input.placeholder} />
+                  </div>
+                ))} */}
+
+                {inputs.map((field) => (
+                  <div key={field.index}>
+                    <label htmlFor={field.name}>{field.label}</label>
+                    {field.type === "select" ? (
+                      <select id={field.name} name={field.name} >
+                        {field.options.map((option, index) => (
+                          <option key={index} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        id={field.name}
+                        name={field.name}
+                        placeholder={field.placeholder}
+                      />
+                    )}
+                  </div>
+                ))}
+                <button type="submit">Send</button>
+              </form>
+            </div>
           </div>
-        </div>
+        }
       </div>
     </div>
   );

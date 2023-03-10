@@ -20,6 +20,7 @@ const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const handleLogout = () => {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('isLoggedIn');
   }
   return (
     <div className="sidebar">

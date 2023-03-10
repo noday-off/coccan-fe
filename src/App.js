@@ -43,7 +43,7 @@ function App() {
                 <Route path=":voucherId" element={<Single />} />
                 <Route
                   path="new"
-                  element={<VoucherNew inputs={voucherInputs} />}
+                  element={<New inputs={voucherInputs} inputType="voucher" title="Add New Voucher" />}
                   />
               </Route>
             </Route>
