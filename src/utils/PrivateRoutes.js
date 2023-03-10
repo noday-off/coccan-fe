@@ -1,13 +1,12 @@
-import { useContext } from 'react';
+// import { useContext, useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
+// import AuthContext from '../context/AuthContext';
+import useAuth from '../hooks/useAuth';
 
 const PrivateRoutes = () => {
-    const {auth} = useContext(AuthContext);
-    let authcheck = localStorage.getItem('jwt');
-    //authcheck.token = true;
+    const {auth} = useAuth();
     return(
-        authcheck ? <Outlet/> : <Navigate to="/login"/>
+        auth ? <Outlet/> : <Navigate to="/login"/>
     )
 }
 

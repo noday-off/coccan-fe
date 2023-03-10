@@ -9,13 +9,13 @@ import AuthContext from "../../context/AuthContext";
 import { async } from "@firebase/util";
 
 const VoucherNew = ({inputs}) => {
-  // const {auth} = useContext(AuthContext);
+  const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Access-Control-Allow-Origin", "*");
-  myHeaders.append("Authorization", `Bearer ${localStorage.getItem("jwt")}`);
+  myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
   var requestOptions = {
       method: 'GET',
       headers: myHeaders,

@@ -13,7 +13,7 @@ const Datatable = ({inputType}) => {
 	var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Origin", "*");
-	myHeaders.append("Authorization", `Bearer ${auth.accessToken}`);
+	myHeaders.append("Authorization", `Bearer ${auth}`);
 	var requestOptions = {
 		method: 'GET',
 		headers: myHeaders,
@@ -81,7 +81,7 @@ const Datatable = ({inputType}) => {
 				<button onClick={handleRefresh}>
 					<RefreshIcon className="icon" />
 				</button>
-				<Link to={inputType==="Vouchers"? '/vouchers/new' : '/new'} className="link">
+				<Link to={inputType==="Vouchers"? '/vouchers/new' : 'new'} className="link">
 					+
 				</Link>
 			</div>

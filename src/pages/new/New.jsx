@@ -17,7 +17,7 @@ const New = ({ inputs,inputType, title }) => {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Access-Control-Allow-Origin", "*");
-  myHeaders.append("Authorization", `Bearer ${auth.accessToken}`);
+  myHeaders.append("Authorization", `Bearer ${auth}`);
   var requestOptions = {
       method: 'GET',
       headers: myHeaders,
