@@ -37,6 +37,17 @@ export const userInputs = [
       type: "select",
       name: "universityId",
       options: []
+    },
+    {
+      id: 6,
+      label: "Wallet ToExchange",
+      type: "number",
+      name: "TOEXCHANGE",
+    },{
+      id: 7,
+      label: "Wallet ToGive",
+      type: "number",
+      name: "TOGIVE",
     }
   ];
   
