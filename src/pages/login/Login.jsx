@@ -7,6 +7,9 @@ import axios from '../../api/axios';
 import {useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import jwt from 'jwt-decode';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Login = () => {
 		const navigate = useNavigate();
@@ -29,6 +32,9 @@ const Login = () => {
 					myHeaders.append("authentication",res.token);
 					fetch(`${process.env.REACT_APP_API_KEY}/Auth`, requestOptions)
 					.then(response => {
+						if(!response.ok){
+							toast.error("Fail to log in! Please try again.");
+						}
 						return response.json()
 					})
 					.then((result) => {
@@ -45,6 +51,7 @@ const Login = () => {
 								console.log('Complete');
 							}
 							else {
+								toast.error("Account role is not allowed!");
 								console.log("Account not allowed");
 								setError("Your account is not allowed to login")
 							}
@@ -72,6 +79,7 @@ const Login = () => {
 							{error}
 						</div>
 					</div>
+					<ToastContainer/>
 				</div>
 		</>
 		)

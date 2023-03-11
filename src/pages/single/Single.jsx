@@ -9,6 +9,9 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { updateOptions } from "../../formSource";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Single = ({inputs,inputType,title}) => {
 	const [data,setData] = useState(null);
@@ -167,12 +170,13 @@ const Single = ({inputs,inputType,title}) => {
 					,requestOptions)
 					.then((response)=>{
 						if(response.ok){
+							toast.success("Added point sucessfully!");
 							console.log("Added point successfully");
 							return response;
 						}
 					})
 					.catch(e => console.log("Error",e))
-					return response.json();
+					return response;
 				}
 			})
 			.then(result => result)
@@ -258,9 +262,7 @@ const Single = ({inputs,inputType,title}) => {
 							<button type="submit">Update</button>
 							<button type="button" onClick={handlePoint}>Edit Points</button>
 						</form>
-						<form id="new-form">
-							
-						</form>
+						<ToastContainer/>
 					</div>
 				</div>
 			</div>

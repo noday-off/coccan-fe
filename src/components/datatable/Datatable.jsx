@@ -5,9 +5,13 @@ import { dataFormat } from "../../datatablesource";
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Datatable = ({inputType}) => {
 	const [data, setData] = useState(null);
+	const [disabled, setDisabled] = useState(false);
 	const {auth} = useContext(AuthContext);
 	const navigate = useNavigation;
 	var myHeaders = new Headers();
@@ -29,27 +33,36 @@ const Datatable = ({inputType}) => {
 
 	// get item list
 	useEffect(() =>{
+		setDisabled(true);
 		fetchData();
+		setDisabled(false);
 	},[inputType]);
 
 	// delete item
 	const handleDelete = (id) => {
+		setDisabled(true);
 		requestOptions.method = 'DELETE';
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`/${id}`)}`, requestOptions)
 		.then(response => {
 			if(response.ok){
 				setData(data.filter(item => item.id !== id));
+				toast.success("Deleted successfully!");
 				return response;
 			}else{
+				toast.error("Fail to delete!");
 				throw new Error('Fail to delete item!');
 			}
 		})
 		.then(result => result)
 		.catch(error => console.log('error', error));
+		setDisabled(false);
 	};
 
 	const handleRefresh = () => {
+		setDisabled(true);
 		fetchData();
+		toast.info('Refreshed!');
+		setDisabled(false);
 	};
 
 	const actionColumn = [
@@ -85,14 +98,20 @@ const Datatable = ({inputType}) => {
 					+
 				</Link>
 			</div>
-			<DataGrid
+			{disabled?
+				<div>
+					Loading....
+				</div>
+				:
+				<DataGrid
 				className="datagrid"
 				rows={data ?? {}}
 				columns={dataFormat[inputType].concat(actionColumn)}
 				pageSize={9}
 				rowsPerPageOptions={[9]}
 				checkboxSelection
-			/>
+				/>
+			}
 		</div>
 	);
 };
