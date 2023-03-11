@@ -20,8 +20,11 @@ const Single = ({inputs,inputType,title}) => {
   const [username,setUsername] = useState('');
   const [role,setRole] = useState('');
 
-  const [vouchers,setVouchers] = useState('');
-  
+  const [address,setAddress] = useState('');
+  const [expiredDate,setExpiredDate] = useState('');
+  const [number,setNumber] = useState('');
+
+  const [isLoading,setIsLoading] = useState(true);
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
   const id = new URLSearchParams(window.location.search).get('id');
@@ -50,20 +53,43 @@ const Single = ({inputs,inputType,title}) => {
       }else if(inputType == 'Organizations'){
         setName(result.name);
         setDescription(result.description);
+      } else if (inputType === 'Vouchers') {
       }
+      setIsLoading(false);
     })
     .catch(error => console.log('error', error));
   };
   useEffect(() =>{
-    fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
-    .then(response => response.json())
-    .then((result) => {
-      updateOptions(inputs,result,3);
-      fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
-      .then(response => response.json())
-      .then((result) => updateOptions(inputs,result,4));
-    })
-    .catch(error => console.log('error', error));
+    switch(inputType) {
+      case 'Users':
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+          updateOptions(inputs,result,3);
+          fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
+          .then(response => response.json())
+          .then((result) => updateOptions(inputs,result,4));
+        })
+        .catch(error => console.log('error', error));
+        break;
+      case 'Vouchers':
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+          updateOptions(inputs,result,0);
+        })
+        .catch(error => console.log('error', error));
+
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+          updateOptions(inputs,result,1);
+        })
+        .catch(error => console.log('error', error));
+        break;
+      default:
+        break;
+    }
     fetchData(id);
   },[inputs]);
 
@@ -86,6 +112,24 @@ const Single = ({inputs,inputType,title}) => {
         .then((result) => console.log(`Updated userId: ${result.id}`))
         .catch(error => console.log('error', error));
         navigate("/users");
+        break;
+      case 'Vouchers':
+        requestOptions.method = 'PUT';
+        requestOptions.body = JSON.stringify({
+          "organizationId": document.getElementById("organizationId")?.value,
+          "categoryId": document.getElementById("categoryId")?.value,
+          "description": document.getElementById("description")?.value,
+          "address": document.getElementById("address")?.value,
+          "number": document.getElementById("number")?.value,
+          "expiredDate": document.getElementById("expiredDate")?.value,
+
+        });
+        console.log(id);
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`).concat(`/${id}`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => console.log(`Updated voucherId: ${result.id}`))
+        .catch(error => console.log('error', error));
+        navigate("/vouchers");
         break;
       case 'Organizations':
         const XHR = new XMLHttpRequest();
@@ -120,6 +164,10 @@ const Single = ({inputs,inputType,title}) => {
       case 'description': setDescription(e.target.value);data[key] = e.target.value;break;
       case 'username': setUsername(e.target.value);data[key] = e.target.value;break;
       case 'email': setEmail(e.target.value);data[key] = e.target.value;break;
+
+      case 'address': setAddress(e.target.value);data[key] = e.target.value;break;
+      case 'expiredDate': setExpiredDate(e.target.value);data[key] = e.target.value;break;
+      case 'number': setNumber(e.target.value);data[key] = e.target.value;break;
     }
   }
   
@@ -131,7 +179,10 @@ const Single = ({inputs,inputType,title}) => {
         <div className="top">
           <h1>{title}</h1>
         </div>
+        {isLoading? <h1>Loading...</h1>
+        :
         <div className="bottom">
+          {inputType!=="Vouchers" &&
           <div className="left">
             <img
               src={
@@ -143,8 +194,10 @@ const Single = ({inputs,inputType,title}) => {
               alt=""
             />
           </div>
+          }
           <div className="right">
             <form onSubmit={handleUpdate} id="new-form">
+              {inputType!=="Vouchers"&&
               <div className="formInput">
                 <label htmlFor="file" style={{display: inputType == 'Users' ? 'none': 'inline'}}>
                   Image: <DriveFolderUploadOutlinedIcon className="icon" />
@@ -157,7 +210,7 @@ const Single = ({inputs,inputType,title}) => {
                   style={{ display: "none" }}
                 />
               </div>
-
+              }
               {inputs.map((field) => (
                 <div key={field.index}>
                   <label htmlFor={field.name}>{field.label}</label>
@@ -167,7 +220,10 @@ const Single = ({inputs,inputType,title}) => {
                         <option key={index} 
                         selected={(field.name == 'departmentId' && option.value == data?.department?.id)
                                   || (field.name == 'universityId' && option.value == data?.university?.id)
-                                  || (field.name == 'role' && option.value == data?.role)}
+                                  || (field.name == 'role' && option.value == data?.role)
+                                  || (field.name == 'organizationId' && option.value == data?.organization?.id)
+                                  || (field.name == 'categoryId' && option.value == data?.category?.id)
+                                }
                         value={option.value}>
                           {option.label}
                         </option>
@@ -189,6 +245,7 @@ const Single = ({inputs,inputType,title}) => {
             </form>
           </div>
         </div>
+        }
       </div>
       {/* <div className="right">
         <Chart aspect={3 / 1} title="User Spending ( Last 6 Months)" />

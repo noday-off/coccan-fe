@@ -45,8 +45,9 @@ const New = ({ inputs,inputType, title }) => {
         .then(response => response.json())
         .then((result) => {
           updateOptions(inputs,result,0);
-
         })
+        .catch(error => console.log('error', error));
+
         fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
         .then(response => response.json())
         .then((result) => {

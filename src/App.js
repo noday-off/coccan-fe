@@ -40,7 +40,7 @@ function App() {
               </Route>
               <Route path="vouchers">
                 <Route index element={<List inputType="Vouchers"/>} />
-                <Route path=":voucherId" element={<Single />} />
+                <Route path="single" element={<Single inputs={voucherInputs} title='Voucher Details' inputType="Vouchers"/>} />
                 <Route
                   path="new"
                   element={<New inputs={voucherInputs} inputType="voucher" title="Add New Voucher" />}

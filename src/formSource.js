@@ -73,12 +73,14 @@ export const voucherInputs = [
     id: 5,
     label: "Expired Date",
     type: "datetime-local",
+    name: "expiredDate",
     placeholder: "2023-03-08T10:56:45.900",
   },
   {
     id: 6,
     label: "Quantity",
     type: "number",
+    name: "number",
     placeholder: "100",
   }
 ];
