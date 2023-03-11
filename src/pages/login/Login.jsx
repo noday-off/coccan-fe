@@ -40,12 +40,12 @@ const Login = () => {
 					.then((result) => {
 						if(result.token){
 							const accessToken = result.token;
-							setAuth({accessToken});
+							//setAuth({accessToken});
 
 							//Decode token
 							if (jwt(accessToken).role === "ADMIN") {
 								//set token into local storage
-								localStorage.setItem('jwt',JSON.stringify(accessToken));
+								localStorage.setItem('jwt',accessToken);
 								localStorage.setItem('isLoggedIn',true);
 								navigate('/');
 								console.log('Complete');

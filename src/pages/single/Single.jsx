@@ -66,20 +66,39 @@ const Single = ({inputs,inputType,title}) => {
 			}else if(inputType == 'Organizations'){
 				setName(result.name);
 				setDescription(result.description);
+			}else if(inputType == 'Vouchers'){
+				setNumber(result.number);
+				setFile(result.organization.logo);
 			}
 		})
 		.catch(error => console.log('error', error));
 	};
 	useEffect(() =>{
-		fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
-		.then(response => response.json())
-		.then((result) => {
-			updateOptions(inputs,result,3);
-			fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
-			.then(response => response.json())
-			.then((result) => updateOptions(inputs,result,4));
-		})
-		.catch(error => console.log('error', error));
+		switch(inputType){
+			case 'Organizations':
+				fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
+				.then(response => response.json())
+				.then((result) => {
+					updateOptions(inputs,result,3);
+					fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
+					.then(response => response.json())
+					.then((result) => updateOptions(inputs,result,4));
+				})
+				.catch(error => console.log('error', error));
+				break;
+			case 'Vouchers':
+				fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
+				.then(response => response.json())
+				.then((result) => {
+					updateOptions(inputs,result,0);
+					fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
+					.then(response => response.json())
+					.then((result) => updateOptions(inputs,result,1));
+				})
+				.catch(error => console.log('error', error));
+				break;
+				
+		}
 		fetchData(id);
 	},[inputs]);
 
@@ -256,7 +275,7 @@ const Single = ({inputs,inputType,title}) => {
 											placeholder={field.placeholder}
 											onChange={(e) => handleChange(e,field.name)}
 											//value ={data?.wallets?.find((wallet) => wallet.walletType === field.name)?.totalPoints ?? null}
-											value = {field.name === 'TOEXCHANGE'? exchangePts: givePts}
+											value = {field.name === 'TOEXCHANGE'? exchangePts: field.name === 'number'? number: givePts}
 										/>
 									):
 									(
