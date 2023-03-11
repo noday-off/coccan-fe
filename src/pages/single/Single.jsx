@@ -29,12 +29,15 @@ const Single = ({inputs,inputType,title}) => {
 	const [givePts,setGivePts] = useState(null)
 	const [givePtsDiff,setGivePtsDiff] = useState(null)
 
-	const [vouchers,setVouchers] = useState('');
-	
-	const {auth} = useContext(AuthContext);
-	const navigate = useNavigate();
-	const id = new URLSearchParams(window.location.search).get('id');
-	var myHeaders = new Headers();
+  const [address,setAddress] = useState('');
+  const [expiredDate,setExpiredDate] = useState('');
+  const [number,setNumber] = useState('');
+
+  const [isLoading,setIsLoading] = useState(true);
+  const {auth} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const id = new URLSearchParams(window.location.search).get('id');
+  var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Origin", "*");
 	myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
@@ -43,6 +46,7 @@ const Single = ({inputs,inputType,title}) => {
 		headers: myHeaders,
 		redirect: 'follow'
 	};
+
 	
 	const fetchData = (id) =>{
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`/${id}`)}`, requestOptions)
@@ -99,6 +103,24 @@ const Single = ({inputs,inputType,title}) => {
 				.catch(error => console.log('error', error));
 				navigate("/users");
 				break;
+        case 'Vouchers':
+        requestOptions.method = 'PUT';
+        requestOptions.body = JSON.stringify({
+          "organizationId": document.getElementById("organizationId")?.value,
+          "categoryId": document.getElementById("categoryId")?.value,
+          "description": document.getElementById("description")?.value,
+          "address": document.getElementById("address")?.value,
+          "number": document.getElementById("number")?.value,
+          "expiredDate": document.getElementById("expiredDate")?.value,
+
+        });
+        console.log(id);
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`).concat(`/${id}`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => console.log(`Updated voucherId: ${result.id}`))
+        .catch(error => console.log('error', error));
+        navigate("/vouchers");
+        break;
 			case 'Organizations':
 				const XHR = new XMLHttpRequest();
 				const formdata = new FormData();
@@ -132,6 +154,9 @@ const Single = ({inputs,inputType,title}) => {
 			case 'description': setDescription(e.target.value);data[key] = e.target.value;break;
 			case 'username': setUsername(e.target.value);data[key] = e.target.value;break;
 			case 'email': setEmail(e.target.value);data[key] = e.target.value;break;
+      case 'address': setAddress(e.target.value);data[key] = e.target.value;break;
+      case 'expiredDate': setExpiredDate(e.target.value);data[key] = e.target.value;break;
+      case 'number': setNumber(e.target.value);data[key] = e.target.value;break;
 			case 'TOEXCHANGE':
 				var ptsDiff = e.target.value - exchangePts;
 				if(ptsDiff != 0){
@@ -240,7 +265,9 @@ const Single = ({inputs,inputType,title}) => {
 												<option key={index} 
 												selected={(field.name == 'departmentId' && option.value == data?.department?.id)
 																	|| (field.name == 'universityId' && option.value == data?.university?.id)
-																	|| (field.name == 'role' && option.value == data?.role)}
+																	|| (field.name == 'role' && option.value == data?.role)
+                                  || (field.name == 'organizationId' && option.value == data?.organization?.id)
+                                  || (field.name == 'categoryId' && option.value == data?.category?.id)}
 												value={option.value}>
 													{option.label}
 												</option>
