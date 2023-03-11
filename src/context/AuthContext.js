@@ -5,8 +5,7 @@ const AuthContext = createContext({});
 
 export const AuthContextProvider = ({ children }) => {
     //const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
-    const token = JSON.parse(localStorage.getItem('jwt'));
-    const [auth, setAuth] = useState(token);
+    const [auth, setAuth] = useState(localStorage.getItem('jwt'));
     return (
         <AuthContext.Provider value={{auth,setAuth}}>
             {children}
