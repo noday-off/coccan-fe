@@ -19,18 +19,21 @@ const Datatable_Single = ({inputType,user}) => {
 		redirect: 'follow'
 	};
 	const fetchData = () => {
-		if (user!=null)
-		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`?walletId=${user.wallets[0].id}`)}`, requestOptions)
-		.then(response =>response.json())
-		.then((result) => {
-			setTransactions(result);
-			console.log(transactions);
-		})
-		.catch(error => console.log('error', error));
+		if (user!=null){
+			console.log(user.wallets.length)
+			fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`?walletId=${user.wallets[0].id}`)}`, requestOptions)
+			.then(response =>response.json())
+			.then((result) => {
+				setTransactions(result.filter(transaction => transaction.walletId==user.wallets[0].id || transaction.walletId==user?.wallets[1]?.id));
+			})
+			.catch(error => console.log('error', error));
+
+		}
 	};
 	// get item list
 	useEffect(() =>{
 		fetchData();
+		console.log(transactions)
 	},[inputType]);
 
 	const handleRefresh = () => {

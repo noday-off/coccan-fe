@@ -22,8 +22,8 @@ const Single = ({inputs,inputType,title}) => {
 	const [data,setData] = useState(null);
 	const [file,setFile] = useState('');
 	const [logoLink,setLogoLink] = useState('');
-  const [isLoading,setIsLoading] = useState(true);
-  const navigate = useNavigate();
+	const [isLoading,setIsLoading] = useState(true);
+	const navigate = useNavigate();
 
 	//organizations states
 	const [name,setName] = useState('');
@@ -65,7 +65,6 @@ const Single = ({inputs,inputType,title}) => {
 		.then(response => response.json())
 		.then((result) => {
 			setData(result);
-			console.log(result);
 			setFile(result.logo || result.profilePhoto || '');
 			setLogoLink(result.logo || result.profilePhoto || '');
 			switch(inputType){
@@ -336,7 +335,6 @@ const Single = ({inputs,inputType,title}) => {
 							</form>
 							<ToastContainer/>
 						</div>
-					
 					</div>
 				}
 				
