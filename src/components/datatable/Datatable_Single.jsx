@@ -19,8 +19,8 @@ const Datatable_Single = ({inputType,user}) => {
 		redirect: 'follow'
 	};
 	const fetchData = () => {
-		
-		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`)}`, requestOptions)
+		if (user!=null)
+		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`?walletId=${user.wallets[0].id}`)}`, requestOptions)
 		.then(response =>response.json())
 		.then((result) => {
 			setTransactions(result);
