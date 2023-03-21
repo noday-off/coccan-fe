@@ -8,8 +8,9 @@ export const AuthContextProvider = ({ children }) => {
     const [auth, setAuth] = useState({});
     useEffect(()=> {
         const token = JSON.parse(localStorage.getItem('jwt'));
-        if (token)
+        if (token && typeof token =="string")
             setAuth(token);
+        console.log(auth);
     },[])
     return (
         <AuthContext.Provider value={{auth,setAuth}}>

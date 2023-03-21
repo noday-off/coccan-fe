@@ -34,7 +34,7 @@ const Login = () => {
 					.then((result) => {
 						if(result.token){
 							const accessToken = result.token;
-							setAuth({accessToken});
+							setAuth(accessToken);
 
 							//Decode token
 							if (jwt(accessToken).role === "ADMIN") {

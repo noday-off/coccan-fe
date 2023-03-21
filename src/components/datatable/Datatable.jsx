@@ -81,7 +81,7 @@ const Datatable = ({inputType}) => {
 				<button onClick={handleRefresh}>
 					<RefreshIcon className="icon" />
 				</button>
-				<Link to={inputType==="Vouchers"? '/vouchers/new' : 'new'} className="link">
+				<Link to='new' className="link">
 					+
 				</Link>
 			</div>

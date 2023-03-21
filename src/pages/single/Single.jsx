@@ -8,11 +8,14 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { updateOptions } from "../../formSource";
 import { useNavigate } from "react-router-dom";
+import Datatable from "../../components/datatable/Datatable";
+import Datatable_Single from "../../components/datatable/Datatable_Single";
 
 const Single = ({inputs,inputType,title}) => {
   const [data,setData] = useState(null);
   const [file,setFile] = useState('');
   const [logoLink,setLogoLink] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [name,setName] = useState('');
   const [logoLinkFile,setLogoLinkFile] = useState('');
   const [description,setDescription] = useState('');
@@ -40,7 +43,6 @@ const Single = ({inputs,inputType,title}) => {
     .then(response => response.json())
     .then((result) => {
       setData(result);
-      console.log(result);
       setFile(result.logo || result.profilePhoto || '');
       setLogoLink(result.logo || result.profilePhoto || '');
       if(inputType == 'Users'){
@@ -51,9 +53,11 @@ const Single = ({inputs,inputType,title}) => {
         setName(result.name);
         setDescription(result.description);
       }
+      setIsLoading(false);
     })
     .catch(error => console.log('error', error));
   };
+
   useEffect(() =>{
     fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
     .then(response => response.json())
@@ -61,12 +65,11 @@ const Single = ({inputs,inputType,title}) => {
       updateOptions(inputs,result,3);
       fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
       .then(response => response.json())
-      .then((result) => updateOptions(inputs,result,4));
+      .then((result) => {updateOptions(inputs,result,4)});
     })
     .catch(error => console.log('error', error));
     fetchData(id);
   },[inputs]);
-
   const handleUpdate = async (e) =>{
     e.preventDefault();
     switch(inputType){
@@ -122,7 +125,6 @@ const Single = ({inputs,inputType,title}) => {
       case 'email': setEmail(e.target.value);data[key] = e.target.value;break;
     }
   }
-  
   return (
     <div className="new">
       <Sidebar />
@@ -131,65 +133,77 @@ const Single = ({inputs,inputType,title}) => {
         <div className="top">
           <h1>{title}</h1>
         </div>
-        <div className="bottom">
-          <div className="left">
-            <img
-              src={
-                typeof file === "string"
-                  ? file
-                  : file instanceof Blob? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-            />
-          </div>
-          <div className="right">
-            <form onSubmit={handleUpdate} id="new-form">
-              <div className="formInput">
-                <label htmlFor="file" style={{display: inputType == 'Users' ? 'none': 'inline'}}>
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                  type="file"
-                  id="file"
-                  name="Logo"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-              </div>
-
-              {inputs.map((field) => (
-                <div key={field.index}>
-                  <label htmlFor={field.name}>{field.label}</label>
-                  {field.type === "select" ? (
-                    <select id={field.name} name={field.name} >
-                      {field.options.map((option, index) => (
-                        <option key={index} 
-                        selected={(field.name == 'departmentId' && option.value == data?.department?.id)
-                                  || (field.name == 'universityId' && option.value == data?.university?.id)
-                                  || (field.name == 'role' && option.value == data?.role)}
-                        value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      type={field.type}
-                      id={field.name}
-                      name={field.name}
-                      placeholder={field.placeholder}
-                      onChange={(e) => handleChange(e,field.name)}
-                      value ={data? data[field.name] : null}
-                    />
-                  )}
+        {isLoading 
+          ? 
+          <h1>Loading...</h1>
+          :
+          <div className="bottom">
+            <div className="left">
+              <img
+                src={
+                  typeof file === "string"
+                    ? file
+                    : file instanceof Blob? URL.createObjectURL(file)
+                    : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                }
+                alt=""
+              />
+            </div>
+            <div className="right">
+              <form onSubmit={handleUpdate} id="new-form">
+                <div className="formInput">
+                  <label htmlFor="file" style={{display: inputType == 'Users' ? 'none': 'inline'}}>
+                    Image: <DriveFolderUploadOutlinedIcon className="icon" />
+                  </label>
+                  <input
+                    type="file"
+                    id="file"
+                    name="Logo"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    style={{ display: "none" }}
+                  />
                 </div>
-              ))}
-              <button type="submit">Update</button>
-            </form>
+  
+                {inputs.map((field) => (
+                  <div key={field.index}>
+                    <label htmlFor={field.name}>{field.label}</label>
+                    {field.type === "select" ? (
+                      <select id={field.name} name={field.name} >
+                        {field.options.map((option, index) => (
+                          <option key={index} 
+                          selected={(field.name == 'departmentId' && option.value == data?.department?.id)
+                                    || (field.name == 'universityId' && option.value == data?.university?.id)
+                                    || (field.name == 'role' && option.value == data?.role)}
+                          value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        id={field.name}
+                        name={field.name}
+                        placeholder={field.placeholder}
+                        onChange={(e) => handleChange(e,field.name)}
+                        value ={data? data[field.name] : null}
+                      />
+                    )}
+                  </div>
+                ))}
+                <button type="submit">Update</button>
+              </form>
+            </div>
           </div>
+        }
+        {inputType==="Users" && isLoading ?
+          <h1>Loading...</h1>
+        :
+          <div className="bottom">
+            <Datatable_Single inputType="Transactions" user={data}/>
+          </div>
+        }
         </div>
-      </div>
       {/* <div className="right">
         <Chart aspect={3 / 1} title="User Spending ( Last 6 Months)" />
       </div> */}
