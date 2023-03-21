@@ -178,7 +178,7 @@ export const dataFormat ={
   Vouchers: [
     { 
       field: "id", 
-      headerName: "ID", 
+      headerName: "ID",
       width: 70 
     },
     {
@@ -218,6 +218,11 @@ export const dataFormat ={
         );
       }
     },
+    {
+      field: "requiredPoints",
+      headerName: "Price",
+      width:100
+    }
   ],
   Organizations: [
     { field: "id", headerName: "ID", width: 70 },
