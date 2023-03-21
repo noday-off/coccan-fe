@@ -11,15 +11,24 @@ import { updateOptions } from "../../formSource";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { DataGrid } from "@mui/x-data-grid";
+import { dataFormat } from "../../datatablesource";
 
 
 const Single = ({inputs,inputType,title}) => {
+	//universal states
 	const [data,setData] = useState(null);
 	const [file,setFile] = useState('');
 	const [logoLink,setLogoLink] = useState('');
+  const [isLoading,setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+	//organizations states
 	const [name,setName] = useState('');
 	const [logoLinkFile,setLogoLinkFile] = useState('');
 	const [description,setDescription] = useState('');
+	
+	//users states
 	const [email,setEmail] = useState('');
 	const [username,setUsername] = useState('');
 	const [role,setRole] = useState('');
@@ -29,13 +38,14 @@ const Single = ({inputs,inputType,title}) => {
 	const [givePts,setGivePts] = useState(null)
 	const [givePtsDiff,setGivePtsDiff] = useState(null)
 
+	//vouchers states
   const [address,setAddress] = useState('');
   const [expiredDate,setExpiredDate] = useState('');
   const [number,setNumber] = useState('');
 
-  const [isLoading,setIsLoading] = useState(true);
-  const {auth} = useContext(AuthContext);
-  const navigate = useNavigate();
+  //const {auth} = useContext(AuthContext);
+
+	//setting up  request
   const id = new URLSearchParams(window.location.search).get('id');
   var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
@@ -56,19 +66,24 @@ const Single = ({inputs,inputType,title}) => {
 			console.log(result);
 			setFile(result.logo || result.profilePhoto || '');
 			setLogoLink(result.logo || result.profilePhoto || '');
-			if(inputType == 'Users'){
-				setUsername(result.username);
-				setEmail(result.email);
-				setRole(result.role);
-				setWallets(result.wallets);
-				setExchangePts(result.wallets.find((wallet)=>wallet.walletType === 'TOEXCHANGE')?.totalPoints);
-				setGivePts(result.wallets.find((wallet)=>wallet.walletType === 'TOGIVE')?.totalPoints);
-			}else if(inputType == 'Organizations'){
-				setName(result.name);
-				setDescription(result.description);
-			}else if(inputType == 'Vouchers'){
-				setNumber(result.number);
-				setFile(result.organization.logo);
+
+			switch(inputType){
+				case 'Users': 
+					setUsername(result.username);
+					setEmail(result.email);
+					setRole(result.role);
+					setWallets(result.wallets);
+					setExchangePts(result.wallets.find((wallet)=>wallet.walletType === 'TOEXCHANGE')?.totalPoints);
+					setGivePts(result.wallets.find((wallet)=>wallet.walletType === 'TOGIVE')?.totalPoints);
+					break;
+				case 'Organiztions': 
+					setName(result.name);
+					setDescription(result.description);
+					break;
+				case 'Vouchers': 
+					setNumber(result.number);
+					setFile(result.organization.logo);
+					break;
 			}
 		})
 		.catch(error => console.log('error', error));
@@ -97,7 +112,6 @@ const Single = ({inputs,inputType,title}) => {
 				})
 				.catch(error => console.log('error', error));
 				break;
-				
 		}
 		fetchData(id);
 	},[inputs]);
@@ -179,7 +193,7 @@ const Single = ({inputs,inputType,title}) => {
 			case 'TOEXCHANGE':
 				var ptsDiff = e.target.value - exchangePts;
 				if(ptsDiff != 0){
-					setExchangePtsDiff(ptsDiff);
+					setExchangePtsDiff(exchangePts+ptsDiff);
 					setExchangePts(e.target.value);
 				}
 				break;
@@ -193,7 +207,6 @@ const Single = ({inputs,inputType,title}) => {
 		}
 	}
 	const handlePoint = () =>{
-		console.log(givePtsDiff);
 		if(givePtsDiff != 0){
 			requestOptions.method = 'PUT';
 			requestOptions.body = JSON.stringify({
@@ -205,6 +218,8 @@ const Single = ({inputs,inputType,title}) => {
 			fetch(`${process.env.REACT_APP_API_KEY.concat(`/wallets/${wallets[1].id}`)}`,requestOptions)
 			.then((response) =>{
 				if(response.ok){
+					toast.success("Added point sucessfully!");
+					console.log("Added point successfully");
 					requestOptions.method = 'POST';
 					fetch(`${process.env.REACT_APP_API_KEY.concat(`/notifications?`)
 					.concat(new URLSearchParams({
@@ -214,8 +229,7 @@ const Single = ({inputs,inputType,title}) => {
 					,requestOptions)
 					.then((response)=>{
 						if(response.ok){
-							toast.success("Added point sucessfully!");
-							console.log("Added point successfully");
+							console.log('Pushed notification successfully!');
 							return response;
 						}
 					})
@@ -306,15 +320,27 @@ const Single = ({inputs,inputType,title}) => {
 								</div>
 							))}
 							<button type="submit">Update</button>
-							<button type="button" onClick={handlePoint}>Edit Points</button>
+							{inputType === "Users" &&
+								<button type="button" onClick={handlePoint}>Edit give points</button>
+							}
 						</form>
 						<ToastContainer/>
 					</div>
 				</div>
 			</div>
-			{/* <div className="right">
-				<Chart aspect={3 / 1} title="User Spending ( Last 6 Months)" />
-			</div> */}
+			{/* {inputType === "Users"?
+			<div className="transaction-datatable">
+				<DataGrid
+					className="datagrid"
+					rows={{}}
+					columns={dataFormat['Transactions'] ?? {}}
+					pageSize={9}
+					rowsPerPageOptions={[9]}
+				/>
+			</div>
+			:
+			<div style={{display: "none"}}></div>
+			} */}
 		</div>
 	);
 };

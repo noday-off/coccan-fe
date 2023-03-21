@@ -110,7 +110,26 @@ export const orgInputs = [
     type: "text",
     name: "description",
     placeholder: "Ho Chi Minh city"
-  },  
+  },
+];
+
+export const universityInputs = [
+  {
+    id: 1,
+    label: "Name",
+    type: "text",
+    name: "name",
+    placeholder: "FPT University"
+  }
+];
+export const departmentInputs = [
+  {
+    id: 1,
+    label: "Name",
+    type: "text",
+    name: "name",
+    placeholder: "Software Engineering"
+  }
 ];
 
 export const updateValue = (field,values) => {
