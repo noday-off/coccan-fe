@@ -334,11 +334,11 @@ const Single = ({inputs,inputType,title}) => {
 										)}
 									</div>
 								))}
-								<button type="submit">Update</button>
+							</form>
+								<button onClick={handleUpdate}>Update</button>
 								{inputType === "Users" &&
 									<button type="button" onClick={handlePoint}>Edit give points</button>
 								}
-							</form>
 							<ToastContainer/>
 						</div>
 					

@@ -144,9 +144,10 @@ const New = ({ inputs,inputType, title }) => {
                 }
                 alt=""
               />
-            </div>}
+            </div>
+            }
             <div className="right">
-              <form onSubmit={handleAdd} id="new-form">
+              <form id="new-form">
                 {["user","organization"].includes(inputType) &&
                   <div className="formInput">
                     <label htmlFor="file">
@@ -173,7 +174,15 @@ const New = ({ inputs,inputType, title }) => {
                           </option>
                         ))}
                       </select>
-                    ) : (
+                    ) : 
+                    (field.type === "textarea"?
+                      <textarea 
+                      id={field.name} 
+                      name={field.name} 
+                      placeholder={field.placeholder}
+                      >
+                      </textarea>
+                      :
                       <input
                         type={field.type}
                         id={field.name}
@@ -183,8 +192,8 @@ const New = ({ inputs,inputType, title }) => {
                     )}
                   </div>
                 ))}
-                <button type="submit">Send</button>
               </form>
+              <button onClick={handleAdd}>Send</button>
             </div>
           </div>
         }

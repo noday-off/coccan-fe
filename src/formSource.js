@@ -69,7 +69,7 @@ export const voucherInputs = [
   {
     id: 3,
     label: "Description",
-    type: "text",
+    type: "textarea",
     name: "description",
     placeholder: "ABC's voucher bonus for customer who ...."
   },
@@ -107,7 +107,7 @@ export const orgInputs = [
   {
     id: 2,
     label: "Description",
-    type: "text",
+    type: "textarea",
     name: "description",
     placeholder: "Ho Chi Minh city"
   },
