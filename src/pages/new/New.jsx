@@ -134,7 +134,7 @@ const New = ({ inputs,inputType, title }) => {
         ? <h4>Loading...</h4>
         :
           <div className="bottom">
-              {["user","organization"].includes(inputType) &&
+            {["user","organization"].includes(inputType) &&
             <div className="left">
               <img
                 src={
