@@ -7,11 +7,13 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ImportForm from "../form/importForm";
 
 
 const Datatable = ({inputType}) => {
 	const [data, setData] = useState(null);
 	const [disabled, setDisabled] = useState(false);
+	const [importForm,setImportForm] = useState(false);
 	const {auth} = useContext(AuthContext);
 	const navigate = useNavigation;
 	var myHeaders = new Headers();
@@ -98,6 +100,7 @@ const Datatable = ({inputType}) => {
 					+
 				</Link>
 			</div>
+			{importForm && <ImportForm setImportForm={setImportForm} />}
 			{disabled?
 				<div>
 					Loading....
@@ -109,8 +112,11 @@ const Datatable = ({inputType}) => {
 				columns={dataFormat[inputType].concat(actionColumn)}
 				pageSize={9}
 				rowsPerPageOptions={[9]}
-				checkboxSelection
+				//checkboxSelection
 				/>
+			}
+			{inputType === "Users" && 
+				<button onClick={() => setImportForm(true)} id="importBtn">Import file</button>
 			}
 		</div>
 	);

@@ -53,7 +53,6 @@ const Datatable_Single = ({inputType,user}) => {
 				columns={dataFormat[inputType]}
 				pageSize={9}
 				rowsPerPageOptions={[9]}
-				checkboxSelection
 			/>
 		</div>
 	);

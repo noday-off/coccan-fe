@@ -100,7 +100,6 @@ const Single = ({inputs,inputType,title}) => {
 					.then((result) => {
 						updateOptions(inputs,result,4)
 						setIsLoading(false);
-
 					}
 					);
 				})
@@ -113,9 +112,15 @@ const Single = ({inputs,inputType,title}) => {
 					updateOptions(inputs,result,0);
 					fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
 					.then(response => response.json())
-					.then((result) => updateOptions(inputs,result,1));
+					.then((result) => {
+						setIsLoading(false);
+						updateOptions(inputs,result,1);
+					});
 				})
 				.catch(error => console.log('error', error));
+				break;
+			default:
+				setIsLoading(false);
 				break;
 		}
 		fetchData(id);
@@ -339,13 +344,15 @@ const Single = ({inputs,inputType,title}) => {
 				}
 				
 				
-				{inputType==="Users" && isLoading 
+				{inputType === "Users" &&
+				(isLoading 
 				?
-					<h1>Loading...</h1>
+					<h1 className="LoadingText">Loading...</h1>
 				:
 					<div className="bottom">
 						<Datatable_Single inputType="Transactions" user={data}/>
 					</div>
+				)
 				}
 			</div>
 		</div>
