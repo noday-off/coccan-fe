@@ -1,6 +1,7 @@
 .datatable {
   height: 600px;
   padding: 20px;
+  width: 100%;
   
   .datatableTitle{
     width: 100%;
@@ -111,6 +112,7 @@
       cursor: pointer;
     }
   }
+
   #importBtn {
     margin-top: 10px;
     border:none;
@@ -127,3 +129,5 @@
     }
   }
 }
+
+

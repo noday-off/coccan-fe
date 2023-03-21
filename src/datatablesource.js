@@ -36,10 +36,27 @@ export const UsersColumns = [
 
 
 export const dataFormat ={
+  Transactions: [
+    {
+      field: "description",
+      headerName: "Description",
+      width: 300,
+    },
+    {
+      field: "points",
+      headerName: "Points",
+      width: 100
+    }, 
+    {
+      field: "createdDatetime",
+      headerName: "Date",
+      width: 180
+    }
+  ],
   Vouchers: [
     { 
       field: "id", 
-      headerName: "ID", 
+      headerName: "ID",
       width: 70 
     },
     {
@@ -48,12 +65,17 @@ export const dataFormat ={
       width: 250,
     },
     {
+      field: "requiredPoints",
+      headerName: "Price",
+      width:100
+    },
+    {
       field: "expiredDate",
       headerName: "Expire Date",
       width: 180
     },
     {
-      field: "number",
+      field: "amountLeft",
       headerName: "Quantity",
       width: 70
     },
@@ -78,7 +100,7 @@ export const dataFormat ={
           </div>
         );
       }
-    },
+    }
   ],
   Organizations: [
     { field: "id", headerName: "ID", width: 70 },
