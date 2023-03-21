@@ -37,6 +37,17 @@ export const userInputs = [
       type: "select",
       name: "universityId",
       options: []
+    },
+    {
+      id: 6,
+      label: "Wallet ToExchange",
+      type: "number",
+      name: "TOEXCHANGE",
+    },{
+      id: 7,
+      label: "Wallet ToGive",
+      type: "number",
+      name: "TOGIVE",
     }
   ];
   
@@ -73,12 +84,14 @@ export const voucherInputs = [
     id: 5,
     label: "Expired Date",
     type: "datetime-local",
+    name: "expiredDate",
     placeholder: "2023-03-08T10:56:45.900",
   },
   {
     id: 6,
     label: "Quantity",
     type: "number",
+    name: "number",
     placeholder: "100",
   }
 ];
@@ -97,7 +110,26 @@ export const orgInputs = [
     type: "text",
     name: "description",
     placeholder: "Ho Chi Minh city"
-  },  
+  },
+];
+
+export const universityInputs = [
+  {
+    id: 1,
+    label: "Name",
+    type: "text",
+    name: "name",
+    placeholder: "FPT University"
+  }
+];
+export const departmentInputs = [
+  {
+    id: 1,
+    label: "Name",
+    type: "text",
+    name: "name",
+    placeholder: "Software Engineering"
+  }
 ];
 
 export const updateValue = (field,values) => {

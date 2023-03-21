@@ -5,13 +5,8 @@ const AuthContext = createContext({});
 
 export const AuthContextProvider = ({ children }) => {
     //const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
-    const [auth, setAuth] = useState({});
-    useEffect(()=> {
-        const token = JSON.parse(localStorage.getItem('jwt'));
-        if (token && typeof token =="string")
-            setAuth(token);
-        console.log(auth);
-    },[])
+    const token = JSON.parse(localStorage.getItem('jwt'));
+    const [auth, setAuth] = useState(token);
     return (
         <AuthContext.Provider value={{auth,setAuth}}>
             {children}

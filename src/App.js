@@ -5,9 +5,9 @@ import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import VoucherNew from "./pages/new/VoucherNew";
 import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
-import { productInputs, userInputs, orgInputs, voucherInputs } from "./formSource";
+import { userInputs, orgInputs, voucherInputs, universityInputs, departmentInputs } from "./formSource";
 import "./style/dark.scss";
-import { useContext, useEffect, useState } from "react";
+import { useContext, } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import PrivateRoutes from "./utils/PrivateRoutes";
 
@@ -40,10 +40,26 @@ function App() {
               </Route>
               <Route path="vouchers">
                 <Route index element={<List inputType="Vouchers"/>} />
-                <Route path=":voucherId" element={<Single />} />
+                <Route path="single" element={<Single inputs={voucherInputs} title='Voucher Details' inputType="Vouchers"/>} />
                 <Route
                   path="new"
                   element={<New inputs={voucherInputs} inputType="voucher" title="Add New Voucher" />}
+                  />
+              </Route>
+              <Route path="universities">
+                <Route index element={<List inputType="Universities"/>} />
+                <Route path="single" element={<Single inputs={universityInputs} title='Voucher Details' inputType="Vouchers"/>} />
+                <Route
+                  path="new"
+                  element={<New inputs={universityInputs} inputType="university" title="Add New University" />}
+                  />
+              </Route>
+              <Route path="departments">
+                <Route index element={<List inputType="Departments"/>} />
+                <Route path="single" element={<Single inputs={departmentInputs} title='Voucher Details' inputType="Vouchers"/>} />
+                <Route
+                  path="new"
+                  element={<New inputs={departmentInputs} inputType="department" title="Add New Department" />}
                   />
               </Route>
             </Route>

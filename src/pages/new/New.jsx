@@ -11,7 +11,7 @@ import AuthContext from "../../context/AuthContext";
 
 const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
   var myHeaders = new Headers();
@@ -39,14 +39,15 @@ const New = ({ inputs,inputType, title }) => {
           })
         })
         .catch(error => console.log('error', error));
-        break;
+        break;        
       case 'voucher':
         fetch(`${process.env.REACT_APP_API_KEY.concat(`/organizations`)}`, requestOptions)
         .then(response => response.json())
         .then((result) => {
           updateOptions(inputs,result,0);
-
         })
+        .catch(error => console.log('error', error));
+
         fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
         .then(response => response.json())
         .then((result) => {
@@ -54,7 +55,9 @@ const New = ({ inputs,inputType, title }) => {
           setIsLoading(false);
         })
         .catch(error => console.log('error', error));
+        break;
       default:
+        setIsLoading(false)
         break;
     }
     
@@ -128,10 +131,10 @@ const New = ({ inputs,inputType, title }) => {
           <h1>{title}</h1>
         </div>
         {isLoading 
-        ? <h1>Loading...</h1>
+        ? <h4>Loading...</h4>
         :
           <div className="bottom">
-              {inputType!=="voucher" &&
+              {["user","organization"].includes(inputType) &&
             <div className="left">
               <img
                 src={
@@ -144,7 +147,7 @@ const New = ({ inputs,inputType, title }) => {
             </div>}
             <div className="right">
               <form onSubmit={handleAdd} id="new-form">
-                {inputType!=="voucher" &&
+                {["user","organization"].includes(inputType) &&
                   <div className="formInput">
                     <label htmlFor="file">
                       Image: <DriveFolderUploadOutlinedIcon className="icon" />
@@ -159,18 +162,11 @@ const New = ({ inputs,inputType, title }) => {
                   </div>
                 }
 
-                {/* {inputs.map((input) => (
-                  <div className="formInput" key={input.id}>
-                    <label>{input.label}</label>
-                    <input type={input.type} id={input.label} placeholder={input.placeholder} />
-                  </div>
-                ))} */}
-
                 {inputs.map((field) => (
-                  <div key={field.index}>
+                  <div key={field.index} className="formInput">
                     <label htmlFor={field.name}>{field.label}</label>
                     {field.type === "select" ? (
-                      <select id={field.name} name={field.name} >
+                      <select id={field.name} name={field.name}>
                         {field.options.map((option, index) => (
                           <option key={index} value={option.value}>
                             {option.label}
