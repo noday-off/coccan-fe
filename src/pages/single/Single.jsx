@@ -9,6 +9,8 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { updateOptions } from "../../formSource";
 import { useNavigate } from "react-router-dom";
+import Datatable from "../../components/datatable/Datatable";
+import Datatable_Single from "../../components/datatable/Datatable_Single";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { DataGrid } from "@mui/x-data-grid";
@@ -66,7 +68,6 @@ const Single = ({inputs,inputType,title}) => {
 			console.log(result);
 			setFile(result.logo || result.profilePhoto || '');
 			setLogoLink(result.logo || result.profilePhoto || '');
-
 			switch(inputType){
 				case 'Users': 
 					setUsername(result.username);
@@ -90,14 +91,18 @@ const Single = ({inputs,inputType,title}) => {
 	};
 	useEffect(() =>{
 		switch(inputType){
-			case 'Organizations':
+			case 'Users':
 				fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
 				.then(response => response.json())
 				.then((result) => {
 					updateOptions(inputs,result,3);
 					fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
 					.then(response => response.json())
-					.then((result) => updateOptions(inputs,result,4));
+					.then((result) => {
+						updateOptions(inputs,result,4)
+						setIsLoading(false);
+					}
+					);
 				})
 				.catch(error => console.log('error', error));
 				break;
@@ -108,9 +113,15 @@ const Single = ({inputs,inputType,title}) => {
 					updateOptions(inputs,result,0);
 					fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
 					.then(response => response.json())
-					.then((result) => updateOptions(inputs,result,1));
+					.then((result) => {
+						setIsLoading(false);
+						updateOptions(inputs,result,1);
+					});
 				})
 				.catch(error => console.log('error', error));
+				break;
+			default:
+				setIsLoading(false);
 				break;
 		}
 		fetchData(id);
@@ -250,97 +261,102 @@ const Single = ({inputs,inputType,title}) => {
 				<div className="top">
 					<h1>{title}</h1>
 				</div>
-				<div className="bottom">
-					<div className="left">
-						<img
-							src={
-								typeof file === "string"
-									? file
-									: file instanceof Blob? URL.createObjectURL(file)
-									: "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-							}
-							alt=""
-						/>
-					</div>
-					<div className="right">
-						<form onSubmit={handleUpdate} id="new-form">
-							<div className="formInput">
-								<label htmlFor="file" style={{display: inputType == 'Users' ? 'none': 'inline'}}>
-									Image: <DriveFolderUploadOutlinedIcon className="icon" />
-								</label>
-								<input
-									type="file"
-									id="file"
-									name="Logo"
-									onChange={(e) => setFile(e.target.files[0])}
-									style={{ display: "none" }}
-								/>
-							</div>
-
-							{inputs.map((field) => (
-								<div key={field.index} className="formInput">
-									<label htmlFor={field.name}>{field.label}</label>
-									{field.type === "select" || field.type === "number" ? (
-										field.type === "number"?(
-											<input
-											type={field.type}
-											id={field.name}
-											name={field.name}
-											placeholder={field.placeholder}
-											onChange={(e) => handleChange(e,field.name)}
-											//value ={data?.wallets?.find((wallet) => wallet.walletType === field.name)?.totalPoints ?? null}
-											value = {field.name === 'TOEXCHANGE'? exchangePts: field.name === 'number'? number: givePts}
-										/>
-									):
-									(
-										<select id={field.name} name={field.name} >
-											{field.options.map((option, index) => (
-												<option key={index} 
-												selected={(field.name == 'departmentId' && option.value == data?.department?.id)
-																	|| (field.name == 'universityId' && option.value == data?.university?.id)
-																	|| (field.name == 'role' && option.value == data?.role)
-                                  || (field.name == 'organizationId' && option.value == data?.organization?.id)
-                                  || (field.name == 'categoryId' && option.value == data?.category?.id)}
-												value={option.value}>
-													{option.label}
-												</option>
-											))}
-										</select>
-									) ):
-									(
-										<input
-											type={field.type}
-											id={field.name}
-											name={field.name}
-											placeholder={field.placeholder}
-											onChange={(e) => handleChange(e,field.name)}
-											value ={data? data[field.name] : null}
-										/>
-									)}
+				{isLoading 
+				?
+					<h1>Loading...</h1>
+				:
+					<div className="bottom">
+						<div className="left">
+							<img
+								src={
+									typeof file === "string"
+										? file
+										: file instanceof Blob? URL.createObjectURL(file)
+										: "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+								}
+								alt=""
+							/>
+						</div>
+						<div className="right">
+							<form onSubmit={handleUpdate} id="new-form">
+								<div className="formInput">
+									<label htmlFor="file" style={{display: inputType == 'Users' ? 'none': 'inline'}}>
+										Image: <DriveFolderUploadOutlinedIcon className="icon" />
+									</label>
+									<input
+										type="file"
+										id="file"
+										name="Logo"
+										onChange={(e) => setFile(e.target.files[0])}
+										style={{ display: "none" }}
+									/>
 								</div>
-							))}
-							<button type="submit">Update</button>
-							{inputType === "Users" &&
-								<button type="button" onClick={handlePoint}>Edit give points</button>
-							}
-						</form>
-						<ToastContainer/>
+
+								{inputs.map((field) => (
+									<div key={field.index} className="formInput">
+										<label htmlFor={field.name}>{field.label}</label>
+										{field.type === "select" || field.type === "number" ? (
+											field.type === "number"?(
+												<input
+												type={field.type}
+												id={field.name}
+												name={field.name}
+												placeholder={field.placeholder}
+												onChange={(e) => handleChange(e,field.name)}
+												//value ={data?.wallets?.find((wallet) => wallet.walletType === field.name)?.totalPoints ?? null}
+												value = {field.name === 'TOEXCHANGE'? exchangePts: field.name === 'number'? number: givePts}
+											/>
+										):
+										(
+											<select id={field.name} name={field.name} >
+												{field.options.map((option, index) => (
+													<option key={index} 
+													selected={(field.name == 'departmentId' && option.value == data?.department?.id)
+																		|| (field.name == 'universityId' && option.value == data?.university?.id)
+																		|| (field.name == 'role' && option.value == data?.role)
+									|| (field.name == 'organizationId' && option.value == data?.organization?.id)
+									|| (field.name == 'categoryId' && option.value == data?.category?.id)}
+													value={option.value}>
+														{option.label}
+													</option>
+												))}
+											</select>
+										) ):
+										(
+											<input
+												type={field.type}
+												id={field.name}
+												name={field.name}
+												placeholder={field.placeholder}
+												onChange={(e) => handleChange(e,field.name)}
+												value ={data? data[field.name] : null}
+											/>
+										)}
+									</div>
+								))}
+								<button type="submit">Update</button>
+								{inputType === "Users" &&
+									<button type="button" onClick={handlePoint}>Edit give points</button>
+								}
+							</form>
+							<ToastContainer/>
+						</div>
+					
 					</div>
-				</div>
+				}
+				
+				
+				{inputType === "Users" &&
+				(isLoading 
+				?
+					<h1 className="LoadingText">Loading...</h1>
+				:
+					<div className="bottom">
+						<Datatable_Single inputType="Transactions" user={data}/>
+					</div>
+				)
+				}
 			</div>
-			{/* {inputType === "Users"?
-			<div className="transaction-datatable">
-				<DataGrid
-					className="datagrid"
-					rows={{}}
-					columns={dataFormat['Transactions'] ?? {}}
-					pageSize={9}
-					rowsPerPageOptions={[9]}
-				/>
-			</div>
-			:
-			<div style={{display: "none"}}></div>
-			} */}
 		</div>
 	);
 };
