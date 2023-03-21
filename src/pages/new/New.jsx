@@ -11,9 +11,10 @@ import AuthContext from "../../context/AuthContext";
 
 const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState("");
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Access-Control-Allow-Origin", "*");
@@ -120,6 +121,9 @@ const New = ({ inputs,inputType, title }) => {
         break;
     }
   };
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
+  };
 
   return (
     <div className="new">
@@ -163,25 +167,48 @@ const New = ({ inputs,inputType, title }) => {
                 }
 
                 {inputs.map((field) => (
-                  <div key={field.index} className="formInput">
-                    <label htmlFor={field.name}>{field.label}</label>
-                    {field.type === "select" ? (
-                      <select id={field.name} name={field.name}>
-                        {field.options.map((option, index) => (
-                          <option key={index} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        type={field.type}
-                        id={field.name}
-                        name={field.name}
-                        placeholder={field.placeholder}
-                      />
-                    )}
-                  </div>
+                  ((field.name === "TOEXCHANGE" || field.name === "TOGIVE") && selectedRole !== "Lecturer")
+                  ? null
+                  :
+                  (
+                    <div key={field.index} className="formInput">
+                      <label htmlFor={field.name}>{field.label}</label>
+                      {field.type === "select" 
+                      ? 
+                        field.name==="role"
+                        ? 
+                          (
+                            <select id={field.name} name={field.name} onChange={handleRoleChange}>
+                              {field.options.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          ) 
+                        :
+                          (
+                            <select id={field.name} name={field.name}>
+                              {field.options.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          ) 
+                      : 
+                        (
+                          <input
+                            type={field.type}
+                            id={field.name}
+                            name={field.name}
+                            placeholder={field.placeholder}
+                            hidden={field.hidden && selectedRole!="Lecturer"}
+                          />
+                        )
+                      }
+                    </div>
+                  )
                 ))}
                 <button type="submit">Send</button>
               </form>
