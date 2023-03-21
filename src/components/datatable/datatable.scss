@@ -111,4 +111,19 @@
       cursor: pointer;
     }
   }
+  #importBtn {
+    margin-top: 10px;
+    border:none;
+    border-radius: 8px;
+    height: 35px;
+    width: 120px;
+    background-color: green;
+    color:white;
+    font-size: medium;
+    font-weight: bold;
+    cursor: pointer;
+    :hover {
+      box-shadow: 0px 0px 3px 3px darkgrey;
+    }
+  }
 }
