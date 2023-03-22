@@ -11,7 +11,7 @@ import Datatable from "../../components/datatable/Datatable";
 import Datatable_Single from "../../components/datatable/Datatable_Single";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, getGridColDef } from "@mui/x-data-grid";
 import { dataFormat } from "../../datatablesource";
 import { DisabledByDefault } from "@mui/icons-material";
 
@@ -43,6 +43,8 @@ const Single = ({inputs,inputType,title}) => {
   const [address,setAddress] = useState('');
   const [expiredDate,setExpiredDate] = useState('');
   const [number,setNumber] = useState('');
+  const [price,setPrice] = useState('');
+  const [amountLeft,setAmountLeft] = useState(0);
 
   //const {auth} = useContext(AuthContext);
 
@@ -64,6 +66,7 @@ const Single = ({inputs,inputType,title}) => {
 		.then(response => response.json())
 		.then((result) => {
 			setData(result);
+			console.log(result);
 			setFile(result.logo || result.profilePhoto || '');
 			setLogoLink(result.logo || result.profilePhoto || '');
 			switch(inputType){
@@ -80,7 +83,10 @@ const Single = ({inputs,inputType,title}) => {
 					setDescription(result.description);
 					break;
 				case 'Vouchers': 
-					setNumber(result.number);
+					setNumber(result.quantity);
+					setPrice(result.requiredPoints);
+					console.log(result.amountLeft);
+					setAmountLeft(result.amountLeft);
 					break;
 			}
 			setIsLoading(false);
@@ -152,13 +158,12 @@ const Single = ({inputs,inputType,title}) => {
           "address": document.getElementById("address")?.value,
           "quantity": document.getElementById("quantity")?.value,
           "expiredDate": document.getElementById("expiredDate")?.value,
-          "requiredPoint":document.getElementById("requiredPoint")?.value,
+          "requiredPoints":document.getElementById("requiredPoints")?.value,
+          "amountLeft":document.getElementById("amountLeft")?.value,
         });
-        console.log(id);
-        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`).concat(`/${id}`)}`, requestOptions)
-        .then(response => response.json())
-        .then((result) => console.log(`Updated voucherId: ${result.id}`))
+        fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`).concat(`/${id}`)}`, requestOptions)
         .catch(error => console.log('error', error));
+		console.log(`updated voucherId: ${id}`);
         navigate("/vouchers");
         break;
 			case 'Organizations':
@@ -319,53 +324,78 @@ const Single = ({inputs,inputType,title}) => {
 								{inputs.map((field) => (
 									<div key={field.index} className="formInput">
 										<label htmlFor={field.name}>{field.label}</label>
-										{field.type === "select" || field.type === "number" ? (
-											field.type === "number"?(
-												<input
-												type={field.type}
-												id={field.name}
-												name={field.name}
+										{field.type === "select" || field.type === "number" 
+										? 
+											(
+												field.type === "number" && (field.name==="TOEXCHANGE" || field.name==="TOGIVE")
+												?
+													(
+														<input
+														type={field.type}
+														id={field.name}
+														name={field.name}
+														placeholder={field.placeholder}
+														onChange={(e) => handleChange(e,field.name)}
+														//value ={data?.wallets?.find((wallet) => wallet.walletType === field.name)?.totalPoints ?? null}
+														value = {field.name === 'TOEXCHANGE'? exchangePts: givePts}
+													/>
+													)
+												: field.type==="number" && (field.name==="requiredPoints"||field.name==="quantity"||field.name==="amountLeft")
+												?
+													(
+														<input
+														type={field.type}
+														id={field.name}
+														name={field.name}
+														placeholder={field.placeholder}
+														onChange={(e) => handleChange(e,field.name)}
+														defaultValue = {field.name === 'requiredPoints'
+																		? price
+																		: field.name==="quantity"
+																		?number
+																		: field.name==="amountLeft"
+																		?amountLeft
+																		:0}
+													/>
+													)
+												:
+													(
+														<select id={field.name} name={field.name} >
+															{field.options.map((option, index) => (
+																<option key={index} 
+																selected={(field.name == 'departmentId' && option.value == data?.department?.id)
+																					|| (field.name == 'universityId' && option.value == data?.university?.id)
+																					|| (field.name == 'role' && option.value == data?.role)
+																					|| (field.name == 'organizationId' && option.value == data?.organization?.id)
+																					|| (field.name == 'categoryId' && option.value == data?.category?.id)}
+																		value={option.value}>
+																		{option.label}
+																</option>
+															))}
+														</select>
+													) )
+										:
+											field.type === "textarea"
+											?
+												<textarea 
+												id={field.name} 
+												name={field.name} 
 												placeholder={field.placeholder}
 												onChange={(e) => handleChange(e,field.name)}
-												//value ={data?.wallets?.find((wallet) => wallet.walletType === field.name)?.totalPoints ?? null}
-												value = {field.name === 'TOEXCHANGE'? exchangePts: field.name === 'quantity'? number: givePts}
-											/>
-										):
-										(
-											<select id={field.name} name={field.name} >
-												{field.options.map((option, index) => (
-													<option key={index} 
-													selected={(field.name == 'departmentId' && option.value == data?.department?.id)
-																		|| (field.name == 'universityId' && option.value == data?.university?.id)
-																		|| (field.name == 'role' && option.value == data?.role)
-									|| (field.name == 'organizationId' && option.value == data?.organization?.id)
-									|| (field.name == 'categoryId' && option.value == data?.category?.id)}
-													value={option.value}>
-														{option.label}
-													</option>
-												))}
-											</select>
-										) ):
-										field.type === "textarea"?
-                      <textarea 
-                      id={field.name} 
-                      name={field.name} 
-                      placeholder={field.placeholder}
-											onChange={(e) => handleChange(e,field.name)}
-                      >
-												{data? data[field.name] : null}
-                      </textarea>
-                      :
-										(
-											<input
-												type={field.type}
-												id={field.name}
-												name={field.name}
-												placeholder={field.placeholder}
-												onChange={(e) => handleChange(e,field.name)}
-												value ={data? data[field.name] : null}
-											/>
-										)}
+												value= {data?data[field.name]:null}
+												>
+												</textarea>
+                      						:
+												(
+													<input
+														type={field.type}
+														id={field.name}
+														name={field.name}
+														placeholder={field.placeholder}
+														onChange={(e) => handleChange(e,field.name)}
+														value ={data? data[field.name] : null}
+													/>
+												)}
 									</div>
 								))}
 							</form>

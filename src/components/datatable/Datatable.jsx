@@ -29,7 +29,7 @@ const Datatable = ({inputType}) => {
 	const fetchData = () => {
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`)}`, requestOptions)
 		.then(response => response.json())
-		.then((result) => setData(result))
+		.then((result) =>setData(result))
 		.catch(error => console.log('error', error));
 	};
 

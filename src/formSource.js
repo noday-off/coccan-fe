@@ -98,8 +98,15 @@ export const voucherInputs = [
     id: 7,
     label: "Price",
     type: "number",
-    name: "requiredPoint",
+    name: "requiredPoints",
     placeholder: "100",
+  },
+  {
+    id: 8,
+    label: "Amount Left",
+    type: "number",
+    name: "amountLeft",
+    placeholder: "",
   }
 ];
 

@@ -108,7 +108,7 @@ const New = ({ inputs,inputType, title }) => {
           "address":document.getElementById("address")?.value,
           "quantity":document.getElementById("quantity")?.value,
           "expiredDate":document.getElementById("expiredDate")?.value,
-          "requiredPoint":document.getElementById("requiredPoint")?.value,
+          "requiredPoints":document.getElementById("requiredPoints")?.value,
         });
         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`)}`, requestOptions)
           .then(response => response.json())

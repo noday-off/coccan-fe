@@ -76,8 +76,8 @@ export const dataFormat ={
     },
     {
       field: "amountLeft",
-      headerName: "Quantity",
-      width: 70
+      headerName: "Amount Left",
+      width: 120
     },
     {
       field: "address",
