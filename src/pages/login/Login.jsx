@@ -47,6 +47,7 @@ const Login = () => {
 								//set token into local storage
 								localStorage.setItem('jwt',accessToken);
 								localStorage.setItem('isLoggedIn',true);
+								localStorage.setItem('signedinAvatar',auth.currentUser.photoURL);
 								navigate('/');
 								console.log('Complete');
 							}
