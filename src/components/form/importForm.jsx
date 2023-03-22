@@ -37,7 +37,7 @@ const ImportForm = ({ setImportForm }) => {
       }
     };
     XHR.open("POST","https://coccan-api20230202190409.azurewebsites.net/api/users/import");
-    XHR.setRequestHeader('Authorization', 'Bearer ' + JSON.parse(localStorage.getItem('jwt')));
+    XHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('jwt'));
     XHR.send(formdata);
   };
   return (
