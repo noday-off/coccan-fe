@@ -52,7 +52,7 @@ const Single = ({inputs,inputType,title}) => {
 	myHeaders.append("Access-Control-Allow-Origin", "*");
 	myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
 	var requestOptions = {
-		method: 'PUT',
+		method: 'GET',
 		headers: myHeaders,
 		redirect: 'follow'
 	};
@@ -184,6 +184,7 @@ const Single = ({inputs,inputType,title}) => {
 				XHR.send(formdata);
 				break;
 			case 'Universities':
+				requestOptions.method = "PUT";
 				requestOptions.body = JSON.stringify({
 					"name": document.getElementById("name")?.value
 				});
@@ -195,6 +196,7 @@ const Single = ({inputs,inputType,title}) => {
 
 				break;
 			case 'Departments':
+				requestOptions.method = "PUT";
 				requestOptions.body = JSON.stringify({
 					"name": document.getElementById("name")?.value
 				});
