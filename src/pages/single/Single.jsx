@@ -3,8 +3,6 @@ import "../new/new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import Chart from "../../components/chart/Chart";
-import List from "../../components/table/Table";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import { updateOptions } from "../../formSource";
@@ -52,9 +50,9 @@ const Single = ({inputs,inputType,title}) => {
   var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Origin", "*");
-	myHeaders.append("Authorization", `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`);
+	myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
 	var requestOptions = {
-		method: 'GET',
+		method: 'PUT',
 		headers: myHeaders,
 		redirect: 'follow'
 	};
@@ -222,13 +220,13 @@ const Single = ({inputs,inputType,title}) => {
 			case 'address': setAddress(e.target.value);data[key] = e.target.value;break;
 			case 'expiredDate': setExpiredDate(e.target.value);data[key] = e.target.value;break;
 			case 'number': setNumber(e.target.value);data[key] = e.target.value;break;
-			case 'TOEXCHANGE':
-				var ptsDiff = e.target.value - exchangePts;
-				if(ptsDiff != 0){
-					setExchangePtsDiff(exchangePts+ptsDiff);
-					setExchangePts(e.target.value);
-				}
-				break;
+			// case 'TOEXCHANGE':
+			// 	var ptsDiff = e.target.value - exchangePts;
+			// 	if(ptsDiff != 0){
+			// 		setExchangePtsDiff(exchangePts+ptsDiff);
+			// 		setExchangePts(e.target.value);
+			// 	}
+			// 	break;
 			case 'TOGIVE':
 				var ptsDiff = e.target.value - givePts;
 				if(ptsDiff != 0){
