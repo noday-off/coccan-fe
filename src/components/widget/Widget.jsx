@@ -24,8 +24,9 @@ const Widget = ({ type }) => {
 	};
   useEffect(()=>{
     fetch(`${process.env.REACT_APP_API_KEY.concat(`/${type}`)}`, requestOptions)
-    .then(response=>response.json()).then(result=>{
-      amount = result?.length;
+    .then(response=>response.json())
+    .then(result=>{
+      setAmount(result?.length);
     }).catch(e=> console.log("Error",e));
   },[amount]);
 
