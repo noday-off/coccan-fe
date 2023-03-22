@@ -11,13 +11,13 @@ import AuthContext from "../../context/AuthContext";
 
 const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Access-Control-Allow-Origin", "*");
-  myHeaders.append("Authorization", `Bearer ${auth}`);
+  myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
   var requestOptions = {
       method: 'GET',
       headers: myHeaders,
@@ -115,6 +115,33 @@ const New = ({ inputs,inputType, title }) => {
           .catch(error => console.log('error', error));
         navigate("/vouchers");
         break;
+
+      case 'university':
+        requestOptions.method = 'POST';
+        requestOptions.body = JSON.stringify({
+          "name": document.getElementById("name")?.value,
+        });
+          
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => console.log(`Created university: ${result.name}`))
+        .catch(error => console.log('error', error));
+        navigate("/universities");
+        break;
+
+      case 'department':
+        requestOptions.method = 'POST';
+        requestOptions.body = JSON.stringify({
+          "name": document.getElementById("name")?.value,
+        });
+          
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => console.log(`Created department: ${result.name}`))
+        .catch(error => console.log('error', error));
+        navigate("/departments");
+        break;
+        
       default:
         navigate('/');
         break;
@@ -131,7 +158,7 @@ const New = ({ inputs,inputType, title }) => {
           <h1>{title}</h1>
         </div>
         {isLoading 
-        ? <h4>Loading...</h4>
+        ? <h4 className="loading">Loading...</h4>
         :
           <div className="bottom">
             {["user","organization"].includes(inputType) &&

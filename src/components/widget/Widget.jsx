@@ -7,16 +7,32 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import SchoolIcon from '@mui/icons-material/School';
+import { useEffect } from "react";
 
 const Widget = ({ type }) => {
   let data;
-
-  //temporary
-  const amount = 100;
   const diff = 20;
 
+  //fetch amount
+  let amount = 100;
+  var myHeaders = new Headers();
+	myHeaders.append("Content-Type", "application/json");
+	myHeaders.append("Access-Control-Allow-Origin", "*");
+	myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
+	var requestOptions = {
+		method: 'GET',
+		headers: myHeaders,
+		redirect: 'follow'
+	};
+  useEffect(()=>{
+    fetch(`${process.env.REACT_APP_API_KEY.concat(`/${type}`)}`, requestOptions)
+    .then(response=>response.json()).then(result=>{
+      amount = result?.length;
+    }).catch(e=> console.log("Error",e));
+  },[amount]);
+
   switch (type) {
-    case "user":
+    case "users":
       data = {
         title: "USERS",
         isMoney: false,
@@ -32,7 +48,7 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "organization":
+    case "organizations":
       data = {
         title: "ORGANIZATIONS",
         isMoney: false,
@@ -48,7 +64,7 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "voucher":
+    case "vouchers":
       data = {
         title: "VOUCHERS",
         isMoney: true,
@@ -61,7 +77,7 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "university":
+    case "universities":
       data = {
         title: "UNIVERSITY",
         isMoney: true,

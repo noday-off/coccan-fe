@@ -12,25 +12,27 @@ const Datatable_Single = ({inputType,user}) => {
 	var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Origin", "*");
-	myHeaders.append("Authorization", `Bearer ${auth}`);
+	myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
 	var requestOptions = {
 		method: 'GET',
 		headers: myHeaders,
 		redirect: 'follow'
 	};
 	const fetchData = () => {
-		if (user!=null)
-		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`?walletId=${user.wallets[0].id}`)}`, requestOptions)
-		.then(response =>response.json())
-		.then((result) => {
-			setTransactions(result);
-			console.log(transactions);
-		})
-		.catch(error => console.log('error', error));
+		if (user!=null){
+			fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`?walletId=${user.wallets[0].id}`)}`, requestOptions)
+			.then(response =>response.json())
+			.then((result) => {
+				setTransactions(result.filter(transaction => transaction.walletId==user.wallets[0].id || transaction.walletId==user?.wallets[1]?.id));
+			})
+			.catch(error => console.log('error', error));
+
+		}
 	};
 	// get item list
 	useEffect(() =>{
 		fetchData();
+		console.log(transactions)
 	},[inputType]);
 
 	const handleRefresh = () => {
