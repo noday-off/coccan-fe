@@ -263,7 +263,7 @@ const Single = ({inputs,inputType,title}) => {
 				</div>
 				{isLoading 
 				?
-					<h1>Loading...</h1>
+					<h1 className="loading">Loading...</h1>
 				:
 					<div className="bottom">
 						<div className="left">
@@ -349,7 +349,7 @@ const Single = ({inputs,inputType,title}) => {
 				{inputType === "Users" &&
 				(isLoading 
 				?
-					<h1 className="LoadingText">Loading...</h1>
+					<h1 className="loading">Loading...</h1>
 				:
 					<div className="bottom">
 						<Datatable_Single inputType="Transactions" user={data}/>

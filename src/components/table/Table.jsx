@@ -29,7 +29,6 @@ const List = () => {
   }).catch(e=> console.log("Error",e));
 
   if(rows){
-
     rows = [
       {
       id: 1143155,
@@ -95,7 +94,7 @@ const List = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows && rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell className="tableCell">{row.id}</TableCell>
               <TableCell className="tableCell">{row.dscription}</TableCell>

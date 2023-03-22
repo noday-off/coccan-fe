@@ -131,7 +131,7 @@ const New = ({ inputs,inputType, title }) => {
           <h1>{title}</h1>
         </div>
         {isLoading 
-        ? <h4>Loading...</h4>
+        ? <h4 className="loading">Loading...</h4>
         :
           <div className="bottom">
             {["user","organization"].includes(inputType) &&
