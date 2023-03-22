@@ -13,6 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { DataGrid } from "@mui/x-data-grid";
 import { dataFormat } from "../../datatablesource";
+import { DisabledByDefault } from "@mui/icons-material";
 
 
 const Single = ({inputs,inputType,title}) => {
@@ -80,7 +81,6 @@ const Single = ({inputs,inputType,title}) => {
 					break;
 				case 'Vouchers': 
 					setNumber(result.number);
-					setFile(result.organization.logo);
 					break;
 			}
 		})
@@ -108,11 +108,12 @@ const Single = ({inputs,inputType,title}) => {
 				.then(response => response.json())
 				.then((result) => {
 					updateOptions(inputs,result,0);
+					setFile(result.logo);
 					fetch(`${process.env.REACT_APP_API_KEY.concat(`/categories`)}`, requestOptions)
 					.then(response => response.json())
 					.then((result) => {
-						setIsLoading(false);
 						updateOptions(inputs,result,1);
+						setIsLoading(false);
 					});
 				})
 				.catch(error => console.log('error', error));
@@ -343,6 +344,16 @@ const Single = ({inputs,inputType,title}) => {
 												))}
 											</select>
 										) ):
+										field.type === "textarea"?
+                      <textarea 
+                      id={field.name} 
+                      name={field.name} 
+                      placeholder={field.placeholder}
+											onChange={(e) => handleChange(e,field.name)}
+                      >
+												{data? data[field.name] : null}
+                      </textarea>
+                      :
 										(
 											<input
 												type={field.type}
