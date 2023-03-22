@@ -11,7 +11,7 @@ import AuthContext from "../../context/AuthContext";
 
 const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const {auth} = useContext(AuthContext);
   const navigate = useNavigate();
   var myHeaders = new Headers();
