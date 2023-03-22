@@ -115,6 +115,33 @@ const New = ({ inputs,inputType, title }) => {
           .catch(error => console.log('error', error));
         navigate("/vouchers");
         break;
+
+      case 'university':
+        requestOptions.method = 'POST';
+        requestOptions.body = JSON.stringify({
+          "name": document.getElementById("name")?.value,
+        });
+          
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => console.log(`Created university: ${result.name}`))
+        .catch(error => console.log('error', error));
+        navigate("/universities");
+        break;
+
+      case 'department':
+        requestOptions.method = 'POST';
+        requestOptions.body = JSON.stringify({
+          "name": document.getElementById("name")?.value,
+        });
+          
+        await fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
+        .then(response => response.json())
+        .then((result) => console.log(`Created department: ${result.name}`))
+        .catch(error => console.log('error', error));
+        navigate("/departments");
+        break;
+        
       default:
         navigate('/');
         break;

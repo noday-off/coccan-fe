@@ -185,6 +185,28 @@ const Single = ({inputs,inputType,title}) => {
 				XHR.open("PUT",`${process.env.REACT_APP_API_KEY.concat(`/organizations`).concat(`/${id}`)}`);
 				XHR.send(formdata);
 				break;
+			case 'Universities':
+				requestOptions.body = JSON.stringify({
+					"name": document.getElementById("name")?.value
+				});
+				await fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`).concat(`/${id}`)}`, requestOptions)
+				.then(response => response.json())
+				.then((result) => console.log(`University updated, new name:${result.name}`))
+				.catch(error => console.log('error', error));
+				navigate("/universities");
+
+				break;
+			case 'Departments':
+				requestOptions.body = JSON.stringify({
+					"name": document.getElementById("name")?.value
+				});
+				await fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`).concat(`/${id}`)}`, requestOptions)
+				.then(response => response.json())
+				.then((result) => console.log(`Deparment updated, new name:${result.name}`))
+				.catch(error => console.log('error', error));
+				navigate("/departments");
+
+				break;
 			default:
 				navigate('/');
 				break;
@@ -197,9 +219,9 @@ const Single = ({inputs,inputType,title}) => {
 			case 'description': setDescription(e.target.value);data[key] = e.target.value;break;
 			case 'username': setUsername(e.target.value);data[key] = e.target.value;break;
 			case 'email': setEmail(e.target.value);data[key] = e.target.value;break;
-      case 'address': setAddress(e.target.value);data[key] = e.target.value;break;
-      case 'expiredDate': setExpiredDate(e.target.value);data[key] = e.target.value;break;
-      case 'number': setNumber(e.target.value);data[key] = e.target.value;break;
+			case 'address': setAddress(e.target.value);data[key] = e.target.value;break;
+			case 'expiredDate': setExpiredDate(e.target.value);data[key] = e.target.value;break;
+			case 'number': setNumber(e.target.value);data[key] = e.target.value;break;
 			case 'TOEXCHANGE':
 				var ptsDiff = e.target.value - exchangePts;
 				if(ptsDiff != 0){
