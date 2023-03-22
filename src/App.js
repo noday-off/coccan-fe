@@ -3,10 +3,11 @@ import Login from "./pages/login/Login";
 import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
+import VoucherNew from "./pages/new/VoucherNew";
 import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
-import { productInputs, userInputs, orgInputs } from "./formSource";
+import { userInputs, orgInputs, voucherInputs, universityInputs, departmentInputs } from "./formSource";
 import "./style/dark.scss";
-import { useContext } from "react";
+import { useContext, } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import PrivateRoutes from "./utils/PrivateRoutes";
 
@@ -35,14 +36,30 @@ function App() {
                 <Route
                   path="new"
                   element={<New inputs={orgInputs} inputType="organization" title="Add New Organization" />}
-                  />
+                />
               </Route>
               <Route path="vouchers">
-                <Route index element={<List />} />
-                <Route path=":voucherId" element={<Single />} />
+                <Route index element={<List inputType="Vouchers"/>} />
+                <Route path="single" element={<Single inputs={voucherInputs} title='Voucher Details' inputType="Vouchers"/>} />
                 <Route
                   path="new"
-                  element={<New inputs={productInputs} inputType="product" title="Add New Vouchers" />}
+                  element={<New inputs={voucherInputs} inputType="voucher" title="Add New Voucher" />}
+                  />
+              </Route>
+              <Route path="universities">
+                <Route index element={<List inputType="Universities"/>} />
+                <Route path="single" element={<Single inputs={universityInputs} title='Voucher Details' inputType="Vouchers"/>} />
+                <Route
+                  path="new"
+                  element={<New inputs={universityInputs} inputType="university" title="Add New University" />}
+                  />
+              </Route>
+              <Route path="departments">
+                <Route index element={<List inputType="Departments"/>} />
+                <Route path="single" element={<Single inputs={departmentInputs} title='Voucher Details' inputType="Vouchers"/>} />
+                <Route
+                  path="new"
+                  element={<New inputs={departmentInputs} inputType="department" title="Add New Department" />}
                   />
               </Route>
             </Route>

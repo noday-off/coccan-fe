@@ -8,6 +8,11 @@
   border-radius: 10px;
   height: 100px;
 
+  &:hover{
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.75);
+  }
+
   .left,
   .right {
     display: flex;

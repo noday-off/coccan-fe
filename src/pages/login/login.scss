@@ -20,6 +20,14 @@
             margin-top: -100px;
             margin-left: -25px;
         }
+        .error-message {
+            position:absolute;
+            bottom:50%;
+            margin-bottom: -100px;
+            color:red;
+            align-items: center;
+            justify-content: center;
+        }
     }    
     button{
         margin: 0 auto;
@@ -37,4 +45,5 @@
     button:hover{
         box-shadow: 0px 0px 4px 1px #beebe9;
     }
+    
 }
