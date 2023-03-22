@@ -22,8 +22,8 @@ const Single = ({inputs,inputType,title}) => {
 	const [data,setData] = useState(null);
 	const [file,setFile] = useState('');
 	const [logoLink,setLogoLink] = useState('');
-  const [isLoading,setIsLoading] = useState(true);
-  const navigate = useNavigate();
+	const [isLoading,setIsLoading] = useState(true);
+	const navigate = useNavigate();
 
 	//organizations states
 	const [name,setName] = useState('');
@@ -52,7 +52,7 @@ const Single = ({inputs,inputType,title}) => {
   var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Origin", "*");
-	myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
+	myHeaders.append("Authorization", `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`);
 	var requestOptions = {
 		method: 'GET',
 		headers: myHeaders,
@@ -65,7 +65,6 @@ const Single = ({inputs,inputType,title}) => {
 		.then(response => response.json())
 		.then((result) => {
 			setData(result);
-			console.log(result);
 			setFile(result.logo || result.profilePhoto || '');
 			setLogoLink(result.logo || result.profilePhoto || '');
 			switch(inputType){
@@ -186,6 +185,28 @@ const Single = ({inputs,inputType,title}) => {
 				XHR.open("PUT",`${process.env.REACT_APP_API_KEY.concat(`/organizations`).concat(`/${id}`)}`);
 				XHR.send(formdata);
 				break;
+			case 'Universities':
+				requestOptions.body = JSON.stringify({
+					"name": document.getElementById("name")?.value
+				});
+				await fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`).concat(`/${id}`)}`, requestOptions)
+				.then(response => response.json())
+				.then((result) => console.log(`University updated, new name:${result.name}`))
+				.catch(error => console.log('error', error));
+				navigate("/universities");
+
+				break;
+			case 'Departments':
+				requestOptions.body = JSON.stringify({
+					"name": document.getElementById("name")?.value
+				});
+				await fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`).concat(`/${id}`)}`, requestOptions)
+				.then(response => response.json())
+				.then((result) => console.log(`Deparment updated, new name:${result.name}`))
+				.catch(error => console.log('error', error));
+				navigate("/departments");
+
+				break;
 			default:
 				navigate('/');
 				break;
@@ -198,9 +219,9 @@ const Single = ({inputs,inputType,title}) => {
 			case 'description': setDescription(e.target.value);data[key] = e.target.value;break;
 			case 'username': setUsername(e.target.value);data[key] = e.target.value;break;
 			case 'email': setEmail(e.target.value);data[key] = e.target.value;break;
-      case 'address': setAddress(e.target.value);data[key] = e.target.value;break;
-      case 'expiredDate': setExpiredDate(e.target.value);data[key] = e.target.value;break;
-      case 'number': setNumber(e.target.value);data[key] = e.target.value;break;
+			case 'address': setAddress(e.target.value);data[key] = e.target.value;break;
+			case 'expiredDate': setExpiredDate(e.target.value);data[key] = e.target.value;break;
+			case 'number': setNumber(e.target.value);data[key] = e.target.value;break;
 			case 'TOEXCHANGE':
 				var ptsDiff = e.target.value - exchangePts;
 				if(ptsDiff != 0){
@@ -341,7 +362,6 @@ const Single = ({inputs,inputType,title}) => {
 								}
 							<ToastContainer/>
 						</div>
-					
 					</div>
 				}
 				
