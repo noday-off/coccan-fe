@@ -6,9 +6,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useEffect, useState } from "react";
 
 const List = () => {
-
+  const [rows,setRows] = useState(null);
   var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Origin", "*");
@@ -18,18 +19,20 @@ const List = () => {
 		headers: myHeaders,
 		redirect: 'follow'
 	};
-  var rows = null
-  fetch(`${process.env.REACT_APP_API_KEY.concat('/transactions')}`, requestOptions)
-  .then(response=>{
-    if(response.ok){
-      return response.json();
-    }
-  }).then(result=>{
-    rows = result;
-  }).catch(e=> console.log("Error",e));
+  useEffect(()=>{
+
+    fetch(`${process.env.REACT_APP_API_KEY.concat('/transactions')}`, requestOptions)
+    .then(response=>{
+      if(response.ok){
+        return response.json();
+      }
+    }).then(result=>{
+      rows = result;
+    }).catch(e=> console.log("Error",e));
+  },[rows]);
 
   if(rows){
-    rows = [
+    setRows([
       {
       id: 1143155,
       product: "Acer Nitro 5",
@@ -80,7 +83,7 @@ const List = () => {
       method: "Online",
       status: "Pending",
     },
-  ];
+  ]);
 }
   return (
     <TableContainer component={Paper} className="table">

@@ -7,14 +7,12 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import SchoolIcon from '@mui/icons-material/School';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Widget = ({ type }) => {
   let data;
   const diff = 20;
-
-  //fetch amount
-  let amount = 100;
+  const [amount,setAmount] = useState(100);
   var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Origin", "*");
