@@ -48,7 +48,7 @@ function App() {
               </Route>
               <Route path="universities">
                 <Route index element={<List inputType="Universities"/>} />
-                <Route path="single" element={<Single inputs={universityInputs} title='Voucher Details' inputType="Vouchers"/>} />
+                <Route path="single" element={<Single inputs={universityInputs} title='University Details' inputType="Universities"/>} />
                 <Route
                   path="new"
                   element={<New inputs={universityInputs} inputType="university" title="Add New University" />}
@@ -56,7 +56,7 @@ function App() {
               </Route>
               <Route path="departments">
                 <Route index element={<List inputType="Departments"/>} />
-                <Route path="single" element={<Single inputs={departmentInputs} title='Voucher Details' inputType="Vouchers"/>} />
+                <Route path="single" element={<Single inputs={departmentInputs} title='Department Details' inputType="Departments"/>} />
                 <Route
                   path="new"
                   element={<New inputs={departmentInputs} inputType="department" title="Add New Department" />}

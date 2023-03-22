@@ -83,6 +83,7 @@ const Single = ({inputs,inputType,title}) => {
 					setNumber(result.number);
 					break;
 			}
+			setIsLoading(false);
 		})
 		.catch(error => console.log('error', error));
 	};
@@ -97,7 +98,6 @@ const Single = ({inputs,inputType,title}) => {
 					.then(response => response.json())
 					.then((result) => {
 						updateOptions(inputs,result,4)
-						setIsLoading(false);
 					}
 					);
 				})
@@ -113,13 +113,11 @@ const Single = ({inputs,inputType,title}) => {
 					.then(response => response.json())
 					.then((result) => {
 						updateOptions(inputs,result,1);
-						setIsLoading(false);
 					});
 				})
 				.catch(error => console.log('error', error));
 				break;
 			default:
-				setIsLoading(false);
 				break;
 		}
 		fetchData(id);
@@ -152,9 +150,9 @@ const Single = ({inputs,inputType,title}) => {
           "categoryId": document.getElementById("categoryId")?.value,
           "description": document.getElementById("description")?.value,
           "address": document.getElementById("address")?.value,
-          "number": document.getElementById("number")?.value,
+          "quantity": document.getElementById("quantity")?.value,
           "expiredDate": document.getElementById("expiredDate")?.value,
-
+          "requiredPoint":document.getElementById("requiredPoint")?.value,
         });
         console.log(id);
         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`).concat(`/${id}`)}`, requestOptions)
@@ -167,11 +165,9 @@ const Single = ({inputs,inputType,title}) => {
 				const XHR = new XMLHttpRequest();
 				const formdata = new FormData();
 				formdata.append("Name", 
-														//document.getElementById('name').value);
-														name);
+														document.getElementById('name').value);
 				formdata.append("Description", 
-														//document.getElementById('description').value);
-														description);
+														document.getElementById('description').value);
 				formdata.append("Logo", file);
 				formdata.append("LogoLink",logoLink);
 				XHR.onreadystatechange = function() {
@@ -287,7 +283,10 @@ const Single = ({inputs,inputType,title}) => {
 				?
 					<h1 className="loading">Loading...</h1>
 				:
+					
 					<div className="bottom">
+						
+						{["Users", "Organizations","Vouchers"].includes(inputType) &&
 						<div className="left">
 							<img
 								src={
@@ -299,20 +298,23 @@ const Single = ({inputs,inputType,title}) => {
 								alt=""
 							/>
 						</div>
+						}
 						<div className="right">
 							<form onSubmit={handleUpdate} id="new-form">
-								<div className="formInput">
-									<label htmlFor="file" style={{display: inputType == 'Users' ? 'none': 'inline'}}>
-										Image: <DriveFolderUploadOutlinedIcon className="icon" />
-									</label>
-									<input
-										type="file"
-										id="file"
-										name="Logo"
-										onChange={(e) => setFile(e.target.files[0])}
-										style={{ display: "none" }}
-									/>
-								</div>
+								{["Users", "Organizations"].includes(inputType) &&
+									<div className="formInput">
+										<label htmlFor="file" style={{display: inputType == 'Users' ? 'none': 'inline'}}>
+											Image: <DriveFolderUploadOutlinedIcon className="icon" />
+										</label>
+										<input
+											type="file"
+											id="file"
+											name="Logo"
+											onChange={(e) => setFile(e.target.files[0])}
+											style={{ display: "none" }}
+										/>
+									</div>
+								}
 
 								{inputs.map((field) => (
 									<div key={field.index} className="formInput">
@@ -326,7 +328,7 @@ const Single = ({inputs,inputType,title}) => {
 												placeholder={field.placeholder}
 												onChange={(e) => handleChange(e,field.name)}
 												//value ={data?.wallets?.find((wallet) => wallet.walletType === field.name)?.totalPoints ?? null}
-												value = {field.name === 'TOEXCHANGE'? exchangePts: field.name === 'number'? number: givePts}
+												value = {field.name === 'TOEXCHANGE'? exchangePts: field.name === 'quantity'? number: givePts}
 											/>
 										):
 										(
