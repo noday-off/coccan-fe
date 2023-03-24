@@ -106,7 +106,7 @@ export const voucherInputs = [
     label: "Amount Left",
     type: "number",
     name: "amountLeft",
-    placeholder: "",
+    placeholder: "0",
   }
 ];
 

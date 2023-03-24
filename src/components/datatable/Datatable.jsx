@@ -12,7 +12,7 @@ import ImportForm from "../form/importForm";
 
 const Datatable = ({inputType}) => {
 	const [data, setData] = useState(null);
-	const [disabled, setDisabled] = useState(false);
+	const [disabled, setDisabled] = useState(true);
 	const [importForm,setImportForm] = useState(false);
 	const {auth} = useContext(AuthContext);
 	const navigate = useNavigation;
@@ -28,8 +28,12 @@ const Datatable = ({inputType}) => {
 
 	const fetchData = () => {
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`)}`, requestOptions)
-		.then(response => response.json())
-		.then((result) =>setData(result))
+		.then(response =>response.json())
+		.then((result) => {
+			setData(result);
+			setDisabled(false);
+		}
+		)
 		.catch(error => console.log('error', error));
 	};
 
@@ -37,12 +41,10 @@ const Datatable = ({inputType}) => {
 	useEffect(() =>{
 		setDisabled(true);
 		fetchData();
-		setDisabled(false);
 	},[inputType]);
 
 	// delete item
 	const handleDelete = (id) => {
-		setDisabled(true);
 		requestOptions.method = 'DELETE';
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`/${id}`)}`, requestOptions)
 		.then(response => {
@@ -57,14 +59,12 @@ const Datatable = ({inputType}) => {
 		})
 		.then(result => result)
 		.catch(error => console.log('error', error));
-		setDisabled(false);
 	};
 
 	const handleRefresh = () => {
 		setDisabled(true);
 		fetchData();
 		toast.info('Refreshed!');
-		setDisabled(false);
 	};
 
 	const actionColumn = [
@@ -100,12 +100,12 @@ const Datatable = ({inputType}) => {
 					+
 				</Link>
 			</div>
-			{importForm && <ImportForm setImportForm={setImportForm} />}
-			{disabled?
-				<div>
-					Loading....
-				</div>
-				:
+			{disabled?(
+				<h1>Loading...</h1>
+			)
+			:(
+			<>
+				{importForm && <ImportForm setImportForm={setImportForm} />}
 				<DataGrid
 				className="datagrid"
 				rows={data ?? {}}
@@ -114,10 +114,11 @@ const Datatable = ({inputType}) => {
 				rowsPerPageOptions={[9]}
 				//checkboxSelection
 				/>
-			}
-			{inputType === "Users" && 
+				{inputType === "Users" && (
 				<button onClick={() => setImportForm(true)} id="importBtn">Import file</button>
-			}
+				)}
+			</>
+			)}
 		</div>
 	);
 };
