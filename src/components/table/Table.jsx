@@ -28,7 +28,7 @@ const List = () => {
     }).then(result=>{
       setRows(result);
     }).catch(e=> console.log("Error",e));
-  },[rows]);
+  },[]);
 
 
   return (
