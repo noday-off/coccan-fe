@@ -17,11 +17,12 @@ import { DisabledByDefault } from "@mui/icons-material";
 
 
 const Single = ({inputs,inputType,title}) => {
+	const [isLoading,setIsLoading] = useState(true);
+	const [componentIsLoading, setComponentIsLoading] = useState(true);
 	//universal states
 	const [data,setData] = useState(null);
 	const [file,setFile] = useState('');
 	const [logoLink,setLogoLink] = useState('');
-	const [isLoading,setIsLoading] = useState(true);
 	const navigate = useNavigate();
 
 	//organizations states
@@ -44,7 +45,7 @@ const Single = ({inputs,inputType,title}) => {
   const [expiredDate,setExpiredDate] = useState('');
   const [number,setNumber] = useState('');
   const [price,setPrice] = useState('');
-  const [amountLeft,setAmountLeft] = useState(0);
+  const [amountLeft, setAmountLeft] = useState(0);
 
   //const {auth} = useContext(AuthContext);
 
@@ -66,7 +67,6 @@ const Single = ({inputs,inputType,title}) => {
 		.then(response => response.json())
 		.then((result) => {
 			setData(result);
-			console.log(result);
 			setFile(result.logo || result.profilePhoto || '');
 			setLogoLink(result.logo || result.profilePhoto || '');
 			switch(inputType){
@@ -85,7 +85,6 @@ const Single = ({inputs,inputType,title}) => {
 				case 'Vouchers': 
 					setNumber(result.quantity);
 					setPrice(result.requiredPoints);
-					console.log(result.amountLeft);
 					setAmountLeft(result.amountLeft);
 					break;
 			}
@@ -104,6 +103,7 @@ const Single = ({inputs,inputType,title}) => {
 					.then(response => response.json())
 					.then((result) => {
 						updateOptions(inputs,result,4)
+						setComponentIsLoading(false);
 					}
 					);
 				})
@@ -119,6 +119,7 @@ const Single = ({inputs,inputType,title}) => {
 					.then(response => response.json())
 					.then((result) => {
 						updateOptions(inputs,result,1);
+						setComponentIsLoading(false);
 					});
 				})
 				.catch(error => console.log('error', error));
@@ -150,68 +151,67 @@ const Single = ({inputs,inputType,title}) => {
 				navigate("/users");
 				break;
         case 'Vouchers':
-        requestOptions.method = 'PUT';
-        requestOptions.body = JSON.stringify({
-          "organizationId": document.getElementById("organizationId")?.value,
-          "categoryId": document.getElementById("categoryId")?.value,
-          "description": document.getElementById("description")?.value,
-          "address": document.getElementById("address")?.value,
-          "quantity": document.getElementById("quantity")?.value,
-          "expiredDate": document.getElementById("expiredDate")?.value,
-          "requiredPoints":document.getElementById("requiredPoints")?.value,
-          "amountLeft":document.getElementById("amountLeft")?.value,
-        });
-        fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`).concat(`/${id}`)}`, requestOptions)
-        .catch(error => console.log('error', error));
-		console.log(`updated voucherId: ${id}`);
-        navigate("/vouchers");
-        break;
-			case 'Organizations':
-				const XHR = new XMLHttpRequest();
-				const formdata = new FormData();
-				formdata.append("Name", 
-														document.getElementById('name').value);
-				formdata.append("Description", 
-														document.getElementById('description').value);
-				formdata.append("Logo", file);
-				formdata.append("LogoLink",logoLink);
-				XHR.onreadystatechange = function() {
-					if (XHR.readyState == XMLHttpRequest.DONE) {
-						navigate('/organizations');
-					}else{
-						navigate('/organizations');
-					}
-				};
-				XHR.open("PUT",`${process.env.REACT_APP_API_KEY.concat(`/organizations`).concat(`/${id}`)}`);
-				XHR.send(formdata);
-				break;
-			case 'Universities':
-				requestOptions.method = "PUT";
-				requestOptions.body = JSON.stringify({
-					"name": document.getElementById("name")?.value
-				});
-				await fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`).concat(`/${id}`)}`, requestOptions)
-				.then(response => response.json())
-				.then((result) => console.log(`University updated, new name:${result.name}`))
-				.catch(error => console.log('error', error));
-				navigate("/universities");
-
-				break;
-			case 'Departments':
-				requestOptions.method = "PUT";
-				requestOptions.body = JSON.stringify({
-					"name": document.getElementById("name")?.value
-				});
-				await fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`).concat(`/${id}`)}`, requestOptions)
-				.then(response => response.json())
-				.then((result) => console.log(`Deparment updated, new name:${result.name}`))
-				.catch(error => console.log('error', error));
-				navigate("/departments");
-
-				break;
-			default:
-				navigate('/');
-				break;
+			requestOptions.method = 'PUT';
+			requestOptions.body = JSON.stringify({
+			"organizationId": document.getElementById("organizationId")?.value,
+			"categoryId": document.getElementById("categoryId")?.value,
+			"description": document.getElementById("description")?.value,
+			"address": document.getElementById("address")?.value,
+			"quantity": document.getElementById("quantity")?.value,
+			"expiredDate": document.getElementById("expiredDate")?.value,
+			"requiredPoints":document.getElementById("requiredPoints")?.value,
+			"amountLeft":document.getElementById("amountLeft")?.value,
+			});
+			fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`).concat(`/${id}`)}`, requestOptions)
+			.catch(error => console.log('error', error));
+			console.log(`updated voucherId: ${id}`);
+			navigate("/vouchers");
+			break;
+		case 'Organizations':
+			const XHR = new XMLHttpRequest();
+			const formdata = new FormData();
+			formdata.append("Name", 
+													document.getElementById('name').value);
+			formdata.append("Description", 
+													document.getElementById('description').value);
+			formdata.append("Logo", file);
+			formdata.append("LogoLink",logoLink);
+			XHR.onreadystatechange = function() {
+				if (XHR.readyState == XMLHttpRequest.DONE) {
+					navigate('/organizations');
+				}else{
+					navigate('/organizations');
+				}
+			};
+			XHR.open("PUT",`${process.env.REACT_APP_API_KEY.concat(`/organizations`).concat(`/${id}`)}`);
+			XHR.send(formdata);
+			console.log("Updated organizatoin: ",document.getElementById('name').value);
+			break;
+		case 'Universities':
+			requestOptions.method = "PUT";
+			requestOptions.body = JSON.stringify({
+				"name": document.getElementById("name")?.value
+			});
+			await fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`).concat(`/${id}`)}`, requestOptions)
+			.then(response => response.json())
+			.then((result) => console.log(`University updated, new name:${result.name}`))
+			.catch(error => console.log('error', error));
+			navigate("/universities");
+			break;
+		case 'Departments':
+			requestOptions.method = "PUT";
+			requestOptions.body = JSON.stringify({
+				"name": document.getElementById("name")?.value
+			});
+			await fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`).concat(`/${id}`)}`, requestOptions)
+			.then(response => response.json())
+			.then((result) => console.log(`Deparment updated, new name:${result.name}`))
+			.catch(error => console.log('error', error));
+			navigate("/departments");
+			break;
+		default:
+			navigate('/');
+			break;
 		};
 	};
 
@@ -284,7 +284,7 @@ const Single = ({inputs,inputType,title}) => {
 				<div className="top">
 					<h1>{title}</h1>
 				</div>
-				{isLoading 
+				{isLoading && componentIsLoading
 				?
 					<h1 className="loading">Loading...</h1>
 				:
@@ -352,10 +352,10 @@ const Single = ({inputs,inputType,title}) => {
 														defaultValue = {field.name === 'requiredPoints'
 																		? price
 																		: field.name==="quantity"
-																		?number
+																		? number
 																		: field.name==="amountLeft"
-																		?amountLeft
-																		:0}
+																		? amountLeft
+																		: 0}
 													/>
 													)
 												:
@@ -410,7 +410,7 @@ const Single = ({inputs,inputType,title}) => {
 				
 				
 				{inputType === "Users" &&
-				(isLoading 
+				(isLoading && componentIsLoading
 				?
 					<h1 className="loading">Loading...</h1>
 				:
