@@ -23,6 +23,7 @@ const Datatable_Single = ({inputType,user}) => {
 			fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`?walletId=${user.wallets[0].id}`)}`, requestOptions)
 			.then(response =>response.json())
 			.then((result) => {
+				console.log(result);
 				setTransactions(result.filter(transaction => transaction.walletId==user.wallets[0].id || transaction.walletId==user?.wallets[1]?.id));
 			})
 			.catch(error => console.log('error', error));

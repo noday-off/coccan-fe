@@ -33,6 +33,7 @@ const Datatable = ({inputType}) => {
 			setData(result);
 			setDisabled(false);
 		})
+
 		.catch(error => console.log('error', error));
 	};
 
@@ -44,7 +45,6 @@ const Datatable = ({inputType}) => {
 
 	// delete item
 	const handleDelete = (id) => {
-		setDisabled(true);
 		requestOptions.method = 'DELETE';
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`/${id}`)}`, requestOptions)
 		.then(response => {
@@ -103,12 +103,13 @@ const Datatable = ({inputType}) => {
 				</Link>
 				}
 			</div>
-			{importForm && <ImportForm setImportForm={setImportForm} />}
-			{disabled?
-				<h1 className="loading">
-					Loading....
-				</h1>
-				:<>
+
+			{disabled?(
+				<h1>Loading...</h1>
+			)
+			:(
+			<>
+				{importForm && <ImportForm setImportForm={setImportForm} />}
 				<DataGrid
 				className="datagrid"
 				rows={data ?? {}}
@@ -117,10 +118,11 @@ const Datatable = ({inputType}) => {
 				rowsPerPageOptions={[9]}
 				//checkboxSelection
 				/>
-				{inputType === "Users" && <button onClick={() => setImportForm(true)} id="importBtn">Import file</button>
-				}
-				</>
-			}
+				{inputType === "Users" && (
+				<button onClick={() => setImportForm(true)} id="importBtn">Import file</button>
+				)}
+			</>
+			)}
 		</div>
 	);
 };
