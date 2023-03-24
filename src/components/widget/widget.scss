@@ -10,6 +10,7 @@
 
   &:hover{
     transform: translateY(-2px);
+    transition-duration: .4s;
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.75);
   }
 
@@ -26,7 +27,7 @@
     }
 
     .counter {
-      font-size: 28px;
+      font-size: 40px;
       font-weight: 300;
     }
 

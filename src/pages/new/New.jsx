@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { logoRef } from "../../components/googleAuth/firebase";
 import { updateOptions } from "../../formSource";
 import AuthContext from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const New = ({ inputs,inputType, title }) => {
   const [file, setFile] = useState("");
@@ -65,6 +66,7 @@ const New = ({ inputs,inputType, title }) => {
     
   const handleAdd = async (e) =>{
     e.preventDefault();
+    setIsLoading(true);
     switch(inputType){
       case 'user':
         requestOptions.method = 'POST';
@@ -77,7 +79,14 @@ const New = ({ inputs,inputType, title }) => {
         });
           
         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/users`)}`, requestOptions)
-        .then(response => response.json())
+        .then(response => {
+          if(response.ok){
+            return response.json();
+          }else{
+            toast.error("Fail to add!");
+            setIsLoading(false);
+          }
+        })
         .then((result) => console.log(`Created userId: ${result.id}`))
         .catch(error => console.log('error', error));
         navigate("/users");
@@ -92,7 +101,8 @@ const New = ({ inputs,inputType, title }) => {
           if (XHR.readyState == XMLHttpRequest.DONE) {
             navigate('/organizations');
           }else{
-            navigate('/organizations');
+            toast.error("Fail to add!");
+            setIsLoading(false);
           }
         };
         XHR.open("POST","https://coccan-api20230202190409.azurewebsites.net/api/Organizations");
@@ -111,7 +121,14 @@ const New = ({ inputs,inputType, title }) => {
           "requiredPoints":document.getElementById("requiredPoints")?.value,
         });
         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/vouchers`)}`, requestOptions)
-          .then(response => response.json())
+          .then(response => {
+            if(response.ok){
+              return response.json();
+            }else{
+              toast.error("Fail to add!");
+              setIsLoading(false);
+            }
+          })
           .then((result) => console.log(result))
           .catch(error => console.log('error', error));
         navigate("/vouchers");
@@ -124,7 +141,14 @@ const New = ({ inputs,inputType, title }) => {
         });
           
         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/universities`)}`, requestOptions)
-        .then(response => response.json())
+        .then(response => {
+          if(response.ok){
+            return response.json();
+          }else{
+            toast.error("Fail to add!");
+            setIsLoading(false);
+          }
+        })
         .then((result) => console.log(`Created university: ${result.name}`))
         .catch(error => console.log('error', error));
         navigate("/universities");
@@ -137,7 +161,14 @@ const New = ({ inputs,inputType, title }) => {
         });
           
         await fetch(`${process.env.REACT_APP_API_KEY.concat(`/departments`)}`, requestOptions)
-        .then(response => response.json())
+        .then(response => {
+          if(response.ok){
+            return response.json();
+          }else{
+            toast.error("Fail to add!");
+            setIsLoading(false);
+          }
+        })
         .then((result) => console.log(`Created department: ${result.name}`))
         .catch(error => console.log('error', error));
         navigate("/departments");
@@ -159,7 +190,7 @@ const New = ({ inputs,inputType, title }) => {
           <h1>{title}</h1>
         </div>
         {isLoading 
-        ? <h4 className="loading">Loading...</h4>
+        ? <h1 className="loading">Loading...</h1>
         :
           <div className="bottom">
             {["user","organization"].includes(inputType) &&

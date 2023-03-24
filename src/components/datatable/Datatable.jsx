@@ -12,7 +12,7 @@ import ImportForm from "../form/importForm";
 
 const Datatable = ({inputType}) => {
 	const [data, setData] = useState(null);
-	const [disabled, setDisabled] = useState(false);
+	const [disabled, setDisabled] = useState(true);
 	const [importForm,setImportForm] = useState(false);
 	const {auth} = useContext(AuthContext);
 	const navigate = useNavigation;
@@ -29,7 +29,10 @@ const Datatable = ({inputType}) => {
 	const fetchData = () => {
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`)}`, requestOptions)
 		.then(response => response.json())
-		.then((result) =>setData(result))
+		.then((result) =>{
+			setData(result);
+			setDisabled(false);
+		})
 		.catch(error => console.log('error', error));
 	};
 
@@ -37,7 +40,6 @@ const Datatable = ({inputType}) => {
 	useEffect(() =>{
 		setDisabled(true);
 		fetchData();
-		setDisabled(false);
 	},[inputType]);
 
 	// delete item
@@ -46,6 +48,7 @@ const Datatable = ({inputType}) => {
 		requestOptions.method = 'DELETE';
 		fetch(`${process.env.REACT_APP_API_KEY.concat(`/${inputType}`).concat(`/${id}`)}`, requestOptions)
 		.then(response => {
+			setDisabled(false);
 			if(response.ok){
 				setData(data.filter(item => item.id !== id));
 				toast.success("Deleted successfully!");
@@ -57,14 +60,12 @@ const Datatable = ({inputType}) => {
 		})
 		.then(result => result)
 		.catch(error => console.log('error', error));
-		setDisabled(false);
 	};
 
 	const handleRefresh = () => {
 		setDisabled(true);
 		fetchData();
 		toast.info('Refreshed!');
-		setDisabled(false);
 	};
 
 	const actionColumn = [
@@ -96,27 +97,29 @@ const Datatable = ({inputType}) => {
 				<button onClick={handleRefresh}>
 					<RefreshIcon className="icon" />
 				</button>
+				{ inputType !== "Transactions" &&
 				<Link to='new' className="link">
 					+
 				</Link>
+				}
 			</div>
 			{importForm && <ImportForm setImportForm={setImportForm} />}
 			{disabled?
-				<div>
+				<h1 className="loading">
 					Loading....
-				</div>
-				:
+				</h1>
+				:<>
 				<DataGrid
 				className="datagrid"
 				rows={data ?? {}}
-				columns={dataFormat[inputType].concat(actionColumn)}
+				columns={inputType=== "Transactions"? dataFormat[inputType]:dataFormat[inputType].concat(actionColumn)}
 				pageSize={9}
 				rowsPerPageOptions={[9]}
 				//checkboxSelection
 				/>
-			}
-			{inputType === "Users" && 
-				<button onClick={() => setImportForm(true)} id="importBtn">Import file</button>
+				{inputType === "Users" && <button onClick={() => setImportForm(true)} id="importBtn">Import file</button>
+				}
+				</>
 			}
 		</div>
 	);

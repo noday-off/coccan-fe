@@ -8,29 +8,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 
-const List = () => {
+const List = ({data}) => {
   const [rows,setRows] = useState(null);
-  var myHeaders = new Headers();
-	myHeaders.append("Content-Type", "application/json");
-	myHeaders.append("Access-Control-Allow-Origin", "*");
-	myHeaders.append("Authorization", `Bearer ${localStorage.getItem('jwt')}`);
-	var requestOptions = {
-		method: 'GET',
-		headers: myHeaders,
-		redirect: 'follow'
-	};
   useEffect(()=>{
-    fetch(`${process.env.REACT_APP_API_KEY.concat('/transactions')}`, requestOptions)
-    .then(response=>{
-      if(response.ok){
-        return response.json();
-      }
-    }).then(result=>{
-      setRows(result);
-    }).catch(e=> console.log("Error",e));
-  },[]);
-
-
+    setRows(data);
+  },[data]);
+  rows?.forEach((item)=>{
+    let t = `${item.createdDatetime}`.split(/[-T:]/);
+    item.createdDateJS = new Date(Date.UTC(t[0],t[1]-1,t[2],t[3],t[4],t[5]))
+    console.log(item.createdDateJS.toString())
+  })
   return (
     <TableContainer component={Paper} className="table">
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -43,7 +30,7 @@ const List = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows && rows.map((row) => (
+          {rows && rows.map((row,idx,arr) => (
             <TableRow key={row.id}>
               <TableCell className="tableCell">{row.id}</TableCell>
               <TableCell className="tableCell">{row.description}</TableCell>

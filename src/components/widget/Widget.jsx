@@ -1,13 +1,13 @@
 import "./widget.scss";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import SchoolIcon from '@mui/icons-material/School';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+
 
 const Widget = ({ type }) => {
   let data;
@@ -51,7 +51,7 @@ const Widget = ({ type }) => {
       data = {
         title: "ORGANIZATIONS",
         isMoney: false,
-        link: "View all orders",
+        link: "View all organizations",
         icon: (
           <StorefrontIcon
             className="icon"
@@ -67,7 +67,7 @@ const Widget = ({ type }) => {
       data = {
         title: "VOUCHERS",
         isMoney: true,
-        link: "View net earnings",
+        link: "View all vouchers",
         icon: (
           <LocalActivityIcon
             className="icon"
@@ -76,13 +76,13 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "universities":
+    case "transactions":
       data = {
-        title: "UNIVERSITY",
+        title: "TRANSACTIONS",
         isMoney: true,
-        link: "See details",
+        link: "View all transactions",
         icon: (
-          <SchoolIcon
+          <CurrencyExchangeIcon
             className="icon"
             style={{
               backgroundColor: "rgba(128, 0, 128, 0.2)",
@@ -99,21 +99,22 @@ const Widget = ({ type }) => {
   return (
     <div className="widget">
       <div className="left">
-        <span className="title">{data.title}</span>
+        <span className="title">{data?.title}</span>
         <span className="counter">
           {amount}
         </span>
-        <span className="link">{data.link}</span>
+        <span className="link">
+          <Link to={`${type}`} style={{textDecoration : 'none',color:'black'}}>{data?.link}
+          </Link></span>
       </div>
       <div className="right">
         {/* <div className="percentage positive">
           <KeyboardArrowUpIcon />
           {diff} %
         </div> */}
-        {data.icon}
+        {data?.icon}
       </div>
     </div>
-  );
-};
+)};
 
 export default Widget;

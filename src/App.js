@@ -62,6 +62,9 @@ function App() {
                   element={<New inputs={departmentInputs} inputType="department" title="Add New Department" />}
                   />
               </Route>
+              <Route path="transactions">
+                <Route index element={<List inputType="Transactions"/>} />
+              </Route>
             </Route>
           </Route>
         </Routes>

@@ -6,18 +6,26 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  YAxis,
+  Legend,
 } from "recharts";
+import { useEffect } from "react";
 
-const data = [
+let data = [
   { name: "January", Total: 1200 },
   { name: "February", Total: 2100 },
   { name: "March", Total: 800 },
-  { name: "April", Total: 1600 },
-  { name: "May", Total: 900 },
-  { name: "June", Total: 1700 },
 ];
 
-const Chart = ({ aspect, title }) => {
+const Chart = ({ aspect, title, transactions }) => {
+  let index = 0;
+  useEffect(()=>{
+  if(transactions){
+    data.forEach((item)=>{
+      item.Total = Math.abs(transactions[index].points)+Math.abs(transactions[index+1].points)+Math.abs(transactions[index+2].points);
+      index += 3;
+    })}
+  },[transactions]);
   return (
     <div className="chart">
       <div className="title">{title}</div>
@@ -35,8 +43,10 @@ const Chart = ({ aspect, title }) => {
             </linearGradient>
           </defs>
           <XAxis dataKey="name" stroke="gray" />
+          <YAxis/>
           <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
           <Tooltip />
+          <Legend />
           <Area
             type="monotone"
             dataKey="Total"

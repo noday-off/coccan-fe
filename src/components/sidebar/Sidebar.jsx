@@ -5,6 +5,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import SchoolIcon from '@mui/icons-material/School';
 import WorkIcon from '@mui/icons-material/Work';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
@@ -60,6 +61,12 @@ const Sidebar = () => {
             <li>
               <WorkIcon className="icon" />
               <span>Departments</span>
+            </li>
+          </Link>
+          <Link to="/transactions" style={{ textDecoration: "none" }}>
+            <li>
+              <CurrencyExchangeIcon className="icon" />
+              <span>Transactions</span>
             </li>
           </Link>
           <p className="title">USER</p>
